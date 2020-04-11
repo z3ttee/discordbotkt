@@ -1,11 +1,11 @@
-# DiscordBot (Kotlin)
+# DiscordBot (Kotlin) [WIP]
 A simple discordbot for playing music using the Discord4j-API, written using Kotlin.
 
-#### Requirements
-* OS: Windows or Linux with a working Java installation\
+### Requirements
+* OS: Windows or Linux with a working Java installation
 * Java-version: Compiled for Java 8 (1.8)
 
-#### Setup
+### Setup
 * Go to [https://discord.com/developers] and register a new application. Additionally you need to create a bot under the "Bot"-section
 * Download jar or compile source code
 * Create a start script. Example for Windows (start.bat):

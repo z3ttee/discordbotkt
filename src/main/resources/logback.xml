@@ -17,7 +17,7 @@
     <appender name="FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <rollingPolicy class="ch.qos.logback.core.rolling.SizeAndTimeBasedRollingPolicy">
             <fileNamePattern>logs/d4j.%d{yyyy-MM-dd}.%i.log</fileNamePattern>
-            <maxFileSize>100MB</maxFileSize>
+            <maxFileSize>10MB</maxFileSize>
             <maxHistory>90</maxHistory>
         </rollingPolicy>
         <encoder>
@@ -35,10 +35,8 @@
 
     <!-- Here you can set the base logger level. If DEBUG is too chatty for you, you can use INFO -->
     <!-- Possible options are: ALL, TRACE, DEBUG, INFO, WARN, ERROR, OFF -->
-    <root level="DEBUG">
-        <appender-ref ref="ASYNC"/>
-    </root>
     <root level="INFO">
         <appender-ref ref="CONSOLE"/>
+        <appender-ref ref="ASYNC"/>
     </root>
 </configuration>
