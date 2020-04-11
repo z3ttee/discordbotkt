@@ -17,19 +17,13 @@ class MainConfig(name: String, filePath: String, version: Int) : ConfigHelper(na
 
             val yaml = Yaml()
             val entries: Map<String, Any> = yaml.load(bufferdInS)
-            logger.info("onCreate(): ${entries.size}")
 
             inputStream.close()
             bufferdInS.close()
-
-            // logger.info("onCreate(): Entries: "+entries)
-
-            // val writer = FileWriter(file)
         }
     }
 
     override fun onCreateFailed(file: File) {}
     override fun onUpgrade(file: File) {}
-
-
+    override fun onDowngrade(file: File) {}
 }
