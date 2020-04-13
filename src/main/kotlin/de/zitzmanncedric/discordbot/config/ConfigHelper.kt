@@ -2,11 +2,12 @@ package de.zitzmanncedric.discordbot.config
 
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import org.yaml.snakeyaml.DumperOptions
 import org.yaml.snakeyaml.Yaml
 import java.io.*
 import java.lang.Exception
-import java.lang.NullPointerException
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 import kotlin.concurrent.schedule
 
@@ -15,8 +16,8 @@ abstract class ConfigHelper(private val name: String, private var filePath: Stri
 
     abstract fun onCreate(file: File?)
     abstract fun onCreateFailed(file: File)
-    abstract fun onUpgrade(file: File)
-    abstract fun onDowngrade(file: File)
+    abstract fun onUpgrade(file: File, prevVersion: Int, newVersion: Int)
+    abstract fun onDowngrade(file: File, prevVersion: Int, newVersion: Int)
 
     init {
         filePath = System.getProperty("user.dir")+File.separator+"config"+File.separator+filePath
@@ -26,12 +27,14 @@ abstract class ConfigHelper(private val name: String, private var filePath: Stri
                 val prevVersion: Int = getInt("configVersion")
                 if (prevVersion < version) {
                     logger.info("init(): Newer version of '$name' is required. Upgrading file...")
-                    onUpgrade(file)
+                    onUpgrade(file, prevVersion, version)
                 }
                 if (prevVersion > version){
                     logger.info("init(): Older version of '$name' is required. Downgrading file...")
-                    onDowngrade(file)
+                    onDowngrade(file, prevVersion, version)
                 }
+
+                putValue("", "configVersion", version)
             } catch (ex: Exception){
                 ex.printStackTrace()
             }
@@ -97,41 +100,35 @@ abstract class ConfigHelper(private val name: String, private var filePath: Stri
 
 
     /**
-     * Puts a new line inside the file
+     * Puts a new line inside the file. (Only two level put possible)
      */
-    fun putValue(path: String, v: Any){
+    fun putValue(category: String, name: String, v: Any){
         val entries = loadContent()
-        val pathKeys = path.split("/")
 
-        if(pathKeys.size == 1){
-            entries[pathKeys[0]] = v
+        if(category.isEmpty() || category.isBlank()) {
+            entries[name] = v
             return
         }
 
-        val map: HashMap<String, Any> = HashMap()
-
-        for((index,key) in pathKeys.withIndex()){
-            if(index < pathKeys.size) {
-                // gets key that comes before this key
-                val keyBefore = when (index) {
-                    0 -> key
-                    else -> pathKeys[index-1]
-                }
-
-                if (map.containsKey(keyBefore)) {
-                    val newMap = HashMap<String, Any>()
-                    newMap[keyBefore] = map.remove(keyBefore)!!
-                    map[key] = newMap
-                } else {
-                    map[key] = v
-                }
-            }
+        if(!entries.containsKey(category)){
+            entries[category] = HashMap<String, Any>()
         }
 
-        entries.putAll(map)
+        val categoryMap = entries[category] as HashMap<String, Any>
+        if(!categoryMap.containsKey(name)){
+            categoryMap[name] = v
+        }
 
-        val yaml = Yaml()
-        yaml.dump(entries,FileWriter(File(filePath, name))).also { logger.debug("putValue(): Put value '$v' in path '$path' in file '$name' successfully.") }
+        save(entries)
+    }
+
+    private fun save(entries: HashMap<String, Any>){
+        val dumpOptions = DumperOptions()
+        dumpOptions.defaultFlowStyle = DumperOptions.FlowStyle.BLOCK
+        dumpOptions.isPrettyFlow = true
+
+        val yaml = Yaml(dumpOptions)
+        yaml.dump(entries,FileWriter(File(filePath, name)))
     }
 
     /**
@@ -150,13 +147,12 @@ abstract class ConfigHelper(private val name: String, private var filePath: Stri
                 logger.info("create(): Created file '$name' successfully.")
                 if (fileCreated) {
                     val writer = FileWriter(file)
-                    writer.write("configVersion: \"$version\"")
+                    writer.write("configVersion: $version")
                     writer.flush()
                     writer.close()
 
-                    Timer("CreateFile", false).schedule(0) {
-                        onCreate(file)
-                    }
+                    Thread.sleep(10)
+                    onCreate(file)
                 }
             }
 
@@ -174,10 +170,17 @@ abstract class ConfigHelper(private val name: String, private var filePath: Stri
         val bufferdInS = BufferedInputStream(inputStream)
 
         val yaml = Yaml()
-        val entries: HashMap<String, Any> = yaml.load(bufferdInS)
+        var entries = HashMap<String, Any>()
 
-        inputStream.close()
-        bufferdInS.close()
+        try {
+            entries = yaml.load(bufferdInS)
+        } catch (ex: Exception){
+            logger.error("loadContent(): Error occured loading file contents:")
+            ex.printStackTrace()
+        } finally {
+            inputStream.close()
+            bufferdInS.close()
+        }
 
         return entries
     }

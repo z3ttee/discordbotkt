@@ -1,13 +1,23 @@
 package de.zitzmanncedric.discordbot
 
+import com.sun.tools.javac.Main
+import de.zitzmanncedric.discordbot.command.CommandHandler
+import de.zitzmanncedric.discordbot.command.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.listener.MessageEventListener
 import de.zitzmanncedric.discordbot.listener.ReadyEventListener
 import discord4j.core.DiscordClient
+import discord4j.core.`object`.presence.Activity
+import discord4j.core.`object`.presence.Presence
 import discord4j.core.event.domain.lifecycle.ReadyEvent
 import discord4j.core.event.domain.message.MessageCreateEvent
+import discord4j.core.event.domain.message.MessageUpdateEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.io.File
+import java.util.concurrent.ExecutorService
+import java.util.concurrent.Executors
+
 
 private val logger: Logger = LoggerFactory.getLogger(BotCore::class.java)
 
@@ -34,32 +44,27 @@ fun main(args: Array<String>) {
     BotCore(token)
 }
 
-class BotCore(private val token: String) {
-    var instance: BotCore? = null
-    get() {
-        if(field == null) field = BotCore(token)
-        return field
+class BotCore(token: String) {
+    companion object {
+        var discordClient: DiscordClient? = null
     }
 
-
-    val mainConfig = MainConfig("config.yml", "", 1)
-
-    var discordClient: DiscordClient = DiscordClient.create(token)
-
     init {
-        instance = this
+        discordClient = DiscordClient.create(token)
+
+        // loading configs
+        MainConfig.create()
+
+        // registering commands
+        ConsoleHandler.start()
+        CommandHandler.registerCommands()
 
         // registering events
-        discordClient.eventDispatcher.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
-        discordClient.eventDispatcher.on(MessageCreateEvent::class.java).subscribe {(MessageEventListener()::onMessage)(it) }
+        discordClient!!.eventDispatcher.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
+        discordClient!!.eventDispatcher.on(MessageCreateEvent::class.java).subscribe { (MessageEventListener()::onMessage)(it) }
+        discordClient!!.eventDispatcher.on(MessageUpdateEvent::class.java).subscribe { (MessageEventListener()::onMessageUpdated)(it) }
 
-        // Loading configs
-        mainConfig.create()
-        mainConfig.putValue("path1/default2/test", "Hallo Welt")
-
-        // Setting presence
-
-
-        discordClient.login().block()
+        // logging in
+        discordClient!!.login().block()
     }
 }

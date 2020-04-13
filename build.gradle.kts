@@ -14,6 +14,7 @@ dependencies {
     implementation("com.discord4j:discord4j-core:3.0.14")
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("org.yaml:snakeyaml:1.26")
+    implementation("org.reflections:reflections:0.9.12")
 }
 
 tasks {
