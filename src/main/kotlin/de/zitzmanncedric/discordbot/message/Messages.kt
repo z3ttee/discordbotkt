@@ -22,7 +22,7 @@ class Messages {
     }
     fun sendTextWithEmbed(content: String, embedSpec: Consumer<in EmbedCreateSpec>, channel: MessageChannel): Mono<Message> {
         return channel.createMessage { messageSpec -> run {
-            messageSpec.setContent(content)
+            messageSpec.setContent("**$content**")
             messageSpec.setEmbed(embedSpec)
         }}
     }

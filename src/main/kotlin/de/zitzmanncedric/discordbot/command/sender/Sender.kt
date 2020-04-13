@@ -6,7 +6,7 @@ import discord4j.core.spec.EmbedCreateSpec
 import reactor.core.publisher.Mono
 import java.util.function.Consumer
 
-abstract class Sender(val channel: MessageChannel?) {
+abstract class Sender(var channel: MessageChannel?) {
     abstract fun sendText(content: String): Mono<Message>
     abstract fun sendError(content: String): Mono<Message>
     abstract fun sendException(ex: Exception): Mono<Message>

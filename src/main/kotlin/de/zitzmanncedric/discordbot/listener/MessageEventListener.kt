@@ -8,10 +8,10 @@ import discord4j.core.event.domain.message.MessageUpdateEvent
 class MessageEventListener {
 
     fun onMessage(event: MessageCreateEvent){
-        if(!event.message.content.get().startsWith("ss ", false)) return
-        if(event.member.get().isBot) return
+        if (!event.message.content.get().startsWith("ss ", false)) return
+        if (event.member.get().isBot) return
 
-        CommandHandler.handleCommand(event.message.content.get(), DiscordSender(event.message.channel.block()!!))
+        CommandHandler.handleCommand(event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
     }
 
     fun onMessageUpdated(event: MessageUpdateEvent) {
