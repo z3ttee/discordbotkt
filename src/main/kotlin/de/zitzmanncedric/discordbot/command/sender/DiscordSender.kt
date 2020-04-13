@@ -1,13 +1,20 @@
 package de.zitzmanncedric.discordbot.command.sender
 
 import de.zitzmanncedric.discordbot.message.Messages
+import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.MessageChannel
 import discord4j.core.spec.EmbedCreateSpec
 import reactor.core.publisher.Mono
 import java.util.function.Consumer
 
-class DiscordSender(channel: MessageChannel) : Sender(channel) {
+class DiscordSender(var member: Member, channel: MessageChannel) : Sender(channel) {
+
+    fun private(): DiscordSender {
+        channel = member.privateChannel.block()
+        return this
+    }
+
     override fun sendText(content: String): Mono<Message> {
         return Messages().sendText(content, channel!!)
     }
