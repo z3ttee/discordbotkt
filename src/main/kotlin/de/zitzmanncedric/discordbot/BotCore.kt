@@ -1,22 +1,16 @@
 package de.zitzmanncedric.discordbot
 
-import com.sun.tools.javac.Main
-import de.zitzmanncedric.discordbot.command.CommandHandler
-import de.zitzmanncedric.discordbot.command.ConsoleHandler
+import de.zitzmanncedric.discordbot.command.handler.CommandHandler
+import de.zitzmanncedric.discordbot.command.handler.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.listener.MessageEventListener
 import de.zitzmanncedric.discordbot.listener.ReadyEventListener
 import discord4j.core.DiscordClient
-import discord4j.core.`object`.presence.Activity
-import discord4j.core.`object`.presence.Presence
 import discord4j.core.event.domain.lifecycle.ReadyEvent
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.event.domain.message.MessageUpdateEvent
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.io.File
-import java.util.concurrent.ExecutorService
-import java.util.concurrent.Executors
 
 
 private val logger: Logger = LoggerFactory.getLogger(BotCore::class.java)

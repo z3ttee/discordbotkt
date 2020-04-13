@@ -1,12 +1,12 @@
-package de.zitzmanncedric.discordbot.command
+package de.zitzmanncedric.discordbot.command.handler
 
+import de.zitzmanncedric.discordbot.command.Command
+import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.config.MainConfig
-import discord4j.core.`object`.entity.Message
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -18,7 +18,7 @@ object CommandHandler {
 
     fun registerCommands(){
         try {
-            val reflections = Reflections(this.javaClass.packageName + ".commands", SubTypesScanner(false))
+            val reflections = Reflections(Command::class.java.packageName + ".commands", SubTypesScanner(true))
             val classSet = reflections.getSubTypesOf(Command::class.java)
 
             classSet.forEach { cmdClass ->
@@ -36,6 +36,7 @@ object CommandHandler {
 
         } catch (ignored: Exception){
             logger.error("registerCommands(): Failed registering existing commands. The bot may not listen to commands.")
+            ignored.printStackTrace()
         }
     }
 
@@ -48,7 +49,7 @@ object CommandHandler {
             try {
                 val command: Command? = commands[cmdName]
                 if (command == null) {
-                    sender.sendError(":mag: Befehl ` $cmdName ` nicht gefunden.")!!.subscribe()
+                    sender.sendError(":mag: Befehl ` $cmdName ` nicht gefunden.").subscribe()
                 } else {
                     command.execute(sender, query)
                 }
