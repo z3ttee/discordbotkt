@@ -8,6 +8,8 @@ import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBu
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import de.zitzmanncedric.discordbot.command.handler.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
+import de.zitzmanncedric.discordbot.language.Lang
+import de.zitzmanncedric.discordbot.language.Language
 import de.zitzmanncedric.discordbot.listener.MessageEventListener
 import de.zitzmanncedric.discordbot.listener.ReadyEventListener
 import discord4j.core.DiscordClient
@@ -64,6 +66,10 @@ class BotCore(token: String) {
         // registering commands
         ConsoleHandler.start()
         CommandHandler.registerCommands()
+
+        // load language
+        // TODO: Make it an option via command and config
+        Lang.initialize(Language.DE)
 
         // creating instance of client
         discordClient = DiscordClient.create(token)
