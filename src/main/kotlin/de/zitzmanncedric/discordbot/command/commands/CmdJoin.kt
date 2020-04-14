@@ -21,6 +21,11 @@ class CmdJoin: Command("join", "(#channel)", "Lässt den Bot in einen Sprachkana
         // Make sender a discord sender
         sender as DiscordSender
 
+        if(args.size > 1) {
+            sendUsage(sender)
+            return
+        }
+
         if(VoiceHandler.hasConnection(guild!!)) {
             sender.sendError(Lang.getString("channel_already_connected"))
             return
