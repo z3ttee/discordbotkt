@@ -10,7 +10,7 @@ object ConsoleHandler: Thread("bot-console-input") {
     override fun run() {
         while (true) {
             val input = readLine()
-            CommandHandler.handleCommand(input!!,
+            CommandHandler.handleCommand(null, input!!,
                 ConsoleSender(null)
             )
         }

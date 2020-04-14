@@ -3,6 +3,7 @@ package de.zitzmanncedric.discordbot.command.handler
 import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.config.MainConfig
+import discord4j.core.`object`.entity.Guild
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.slf4j.Logger
@@ -40,7 +41,7 @@ object CommandHandler {
         }
     }
 
-    fun handleCommand(message: String, sender: Sender) {
+    fun handleCommand(guild: Guild?, message: String, sender: Sender) {
         val thread = Thread {
             val content: String = message.removePrefix(MainConfig.getString("general/prefix"))
             val query = ArrayList<String>(content.split(" "))
@@ -51,7 +52,7 @@ object CommandHandler {
                 if (command == null) {
                     sender.sendError(":mag: Befehl ` $cmdName ` nicht gefunden.").subscribe()
                 } else {
-                    command.execute(sender, query)
+                    command.execute(sender, guild!!, query)
                 }
             } catch (ignored: KotlinNullPointerException){ }
 

@@ -5,12 +5,13 @@ import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import de.zitzmanncedric.discordbot.command.sender.DiscordSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
+import discord4j.core.`object`.entity.Guild
 import java.awt.Color
 import java.util.function.Consumer
 
 class CmdHelp : Command("help", "", "Zeigt den Hilfecenter", Category.GENERAL) {
 
-    override fun execute(sender: Sender, args: ArrayList<String>) {
+    override fun execute(sender: Sender, guild: Guild, args: ArrayList<String>) {
 
         if(sender is DiscordSender){
             sender.private().sendTextWitEmbed("Hilfecenter & Befehlübersicht", Consumer { embed -> run {
