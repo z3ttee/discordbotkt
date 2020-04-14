@@ -2,14 +2,13 @@ package de.zitzmanncedric.discordbot.message
 
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.MessageChannel
-import discord4j.core.`object`.entity.TextChannel
 import discord4j.core.spec.EmbedCreateSpec
 import discord4j.core.spec.MessageCreateSpec
 import reactor.core.publisher.Mono
 import java.awt.Color
 import java.util.function.Consumer
 
-class Messages {
+object Messages {
 
     fun sendText(content: String, channel: MessageChannel): Mono<Message> {
         return channel.createMessage(createText(content))

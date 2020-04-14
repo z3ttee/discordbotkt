@@ -3,7 +3,9 @@ package de.zitzmanncedric.discordbot.command.handler
 import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.config.MainConfig
+import de.zitzmanncedric.discordbot.language.Lang
 import discord4j.core.`object`.entity.Guild
+import discord4j.core.`object`.entity.Message
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
 import org.slf4j.Logger
@@ -41,7 +43,7 @@ object CommandHandler {
         }
     }
 
-    fun handleCommand(guild: Guild?, message: String, sender: Sender) {
+    fun handleCommand(guild: Guild?, eventMessage: Message?, message: String, sender: Sender) {
         val thread = Thread {
             val content: String = message.removePrefix(MainConfig.getString("general/prefix"))
             val query = ArrayList<String>(content.split(" "))
@@ -50,9 +52,9 @@ object CommandHandler {
             try {
                 val command: Command? = commands[cmdName]
                 if (command == null) {
-                    sender.sendError(":mag: Befehl ` $cmdName ` nicht gefunden.").subscribe()
+                    sender.sendError(Lang.getString("error_cmd_not_found").replace("%name%", cmdName)).subscribe()
                 } else {
-                    command.execute(sender, guild!!, query)
+                    command.execute(sender, eventMessage, guild, query)
                 }
             } catch (ignored: KotlinNullPointerException){ }
 

@@ -16,19 +16,19 @@ class DiscordSender(var member: Member, channel: MessageChannel) : Sender(channe
     }
 
     override fun sendText(content: String): Mono<Message> {
-        return Messages().sendText(content, channel!!)
+        return Messages.sendText(content, channel!!)
     }
 
     override fun sendError(content: String): Mono<Message> {
-        return Messages().sendError(content, channel!!)
+        return Messages.sendError(content, channel!!)
     }
 
     override fun sendException(ex: Exception): Mono<Message> {
         ex.printStackTrace()
-        return Messages().sendException(ex, channel!!)
+        return Messages.sendException(ex, channel!!)
     }
 
     override fun sendTextWitEmbed(content: String, embedSpec: Consumer<in EmbedCreateSpec>): Mono<Message> {
-        return Messages().sendTextWithEmbed(content, embedSpec, channel!!)
+        return Messages.sendTextWithEmbed(content, embedSpec, channel!!)
     }
 }

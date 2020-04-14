@@ -11,7 +11,7 @@ class MessageEventListener {
         if (!event.message.content.get().startsWith("ss ", false)) return
         if (event.member.get().isBot) return
 
-        CommandHandler.handleCommand(event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
+        CommandHandler.handleCommand(event.guild.block(), event.message, event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
     }
 
     fun onMessageUpdated(event: MessageUpdateEvent) {

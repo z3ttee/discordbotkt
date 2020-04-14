@@ -14,6 +14,7 @@
     <item name="error_cmd_not_found">:mag: Befehl ` %name% ` nicht gefunden.</item>
     <item name="error_cmd_usage">Meintest du vielleicht ` %usage% ` ?</item>
     <item name="error_voice_not_found">:mag: Sprachkanal nicht gefunden.</item>
+    <item name="error_404">Es konnte nichts gefunden werden</item>
 
     <item name="cmd_help_description">Zeigt den Hilfecenter</item>
     <item name="cmd_join_description">Lässt den Bot einem Sprachkanal beitreten</item>
