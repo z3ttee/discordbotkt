@@ -1,5 +1,10 @@
 package de.zitzmanncedric.discordbot
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
+import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import de.zitzmanncedric.discordbot.command.handler.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
@@ -9,6 +14,7 @@ import discord4j.core.DiscordClient
 import discord4j.core.event.domain.lifecycle.ReadyEvent
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.event.domain.message.MessageUpdateEvent
+import discord4j.voice.AudioProvider
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -41,10 +47,16 @@ fun main(args: Array<String>) {
 class BotCore(token: String) {
     companion object {
         var discordClient: DiscordClient? = null
+        var provider: AudioProvider? = null
     }
 
     init {
-        discordClient = DiscordClient.create(token)
+        // register audio
+        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
+        AudioSourceManagers.registerRemoteSources(playerManager)
+        //TODO: AudioSourceManagers.registerLocalSource(playerManager)
+        val player: AudioPlayer = playerManager.createPlayer()
+        provider = de.zitzmanncedric.discordbot.audio.AudioProvider(player)
 
         // loading configs
         MainConfig.create()
@@ -52,6 +64,9 @@ class BotCore(token: String) {
         // registering commands
         ConsoleHandler.start()
         CommandHandler.registerCommands()
+
+        // creating instance of client
+        discordClient = DiscordClient.create(token)
 
         // registering events
         discordClient!!.eventDispatcher.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
