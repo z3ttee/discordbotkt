@@ -1,10 +1,5 @@
 package de.zitzmanncedric.discordbot
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
-import com.sedmelluq.discord.lavaplayer.track.playback.NonAllocatingAudioFrameBuffer
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import de.zitzmanncedric.discordbot.command.handler.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
@@ -49,17 +44,9 @@ fun main(args: Array<String>) {
 class BotCore(token: String) {
     companion object {
         var discordClient: DiscordClient? = null
-        var provider: AudioProvider? = null
     }
 
     init {
-        // register audio
-        val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-        AudioSourceManagers.registerRemoteSources(playerManager)
-        //TODO: AudioSourceManagers.registerLocalSource(playerManager)
-        val player: AudioPlayer = playerManager.createPlayer()
-        provider = de.zitzmanncedric.discordbot.audio.AudioProvider(player)
-
         // loading configs
         MainConfig.create()
 
