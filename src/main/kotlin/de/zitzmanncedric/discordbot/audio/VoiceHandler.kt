@@ -10,6 +10,7 @@ import discord4j.core.`object`.entity.VoiceChannel
 import discord4j.voice.VoiceConnection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import reactor.core.publisher.Mono
 
 object VoiceHandler {
     private val logger: Logger = LoggerFactory.getLogger(VoiceHandler::class.java)
@@ -17,38 +18,43 @@ object VoiceHandler {
     val activeConnections: HashMap<Guild, VoiceConnection> = HashMap()
     val textChannels: HashMap<Guild, MessageChannel> = HashMap()
 
-    fun createConnection(guild: Guild, channel: VoiceChannel, textChannel: MessageChannel): Boolean {
-        try {
-            channel.join { joinSpec ->
-                run {
-                    joinSpec.setProvider(BotCore.provider!!)
-                }
-            }.subscribe { connection ->
-                run {
+    fun createConnection(guild: Guild, channel: VoiceChannel, textChannel: MessageChannel): Mono<Boolean> {
+        return Mono.create {
+            try {
+                val connection: VoiceConnection? = channel.join { joinSpec ->
+                    run {
+                        joinSpec.setProvider(BotCore.provider!!)
+                    }
+                }.block()
+
+                if(connection != null) {
                     activeConnections[guild] = connection
                     textChannels[guild] = textChannel
-
-                    // TODO
-                    Messages.sendText(Lang.getString("channel_joined"), textChannel).subscribe()
                     logger.info("createConnection(): Voice connection established.")
+                    it.success(true)
+                } else {
+                    it.success(false)
                 }
+            } catch (ex: Exception){
+                ex.printStackTrace()
+                it.success(false)
             }
-            return true
-        } catch (ex: Exception){
-            ex.printStackTrace()
-            return false
         }
     }
-    fun closeConnection(guild: Guild) {
-        if(activeConnections.containsKey(guild)) {
-            val connection: VoiceConnection = activeConnections.remove(guild)!!
-            connection.disconnect().also {
-                Messages.sendText(Lang.getString("channel_left"), getTextChannel(guild)!!)
-                // TODO: Clear and stop music queue
+    fun closeConnection(guild: Guild): Mono<Boolean> {
+        return Mono.create {
+            if (activeConnections.containsKey(guild)) {
+                val connection: VoiceConnection = activeConnections.remove(guild)!!
+                connection.disconnect().also {
+                    Messages.sendText(Lang.getString("channel_left"), getTextChannel(guild)!!)
+                    // TODO: Clear and stop music queue
+                }
             }
-        }
-        if(textChannels.containsKey(guild)) {
-            textChannels.remove(guild)
+            if (textChannels.containsKey(guild)) {
+                textChannels.remove(guild)
+            }
+
+            it.success(true)
         }
     }
 
