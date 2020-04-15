@@ -1,6 +1,11 @@
 package de.zitzmanncedric.discordbot.audio
 
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
+import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
+import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import de.zitzmanncedric.discordbot.BotCore
+import de.zitzmanncedric.discordbot.audio.queue.AudioResultHandler
 import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
@@ -11,6 +16,7 @@ import discord4j.voice.VoiceConnection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import reactor.core.publisher.Mono
+import java.net.URL
 
 object VoiceHandler {
     private val logger: Logger = LoggerFactory.getLogger(VoiceHandler::class.java)
@@ -18,12 +24,21 @@ object VoiceHandler {
     val activeConnections: HashMap<Guild, VoiceConnection> = HashMap()
     val textChannels: HashMap<Guild, MessageChannel> = HashMap()
 
+    val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
+    val audioPlayer: AudioPlayer = playerManager.createPlayer()
+    val audioProvider: discord4j.voice.AudioProvider = AudioProvider(audioPlayer)
+
+    init {
+        AudioSourceManagers.registerRemoteSources(playerManager)
+        //TODO: AudioSourceManagers.registerLocalSource(playerManager)
+    }
+
     fun createConnection(guild: Guild, channel: VoiceChannel, textChannel: MessageChannel): Mono<Boolean> {
         return Mono.create {
             try {
                 val connection: VoiceConnection? = channel.join { joinSpec ->
                     run {
-                        joinSpec.setProvider(BotCore.provider!!)
+                        joinSpec.setProvider(audioProvider)
                     }
                 }.block()
 
@@ -67,6 +82,11 @@ object VoiceHandler {
     }
     fun setTextChannel(guild: Guild, channel: MessageChannel) {
         textChannels[guild] = channel
+    }
+
+    fun playSource(guild: Guild, url: URL) {
+        val resultHandler: AudioResultHandler = AudioResultHandler(guild, audioPlayer)
+        playerManager.loadItem(url.toString(), resultHandler)
     }
 
 }
