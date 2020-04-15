@@ -19,6 +19,9 @@
     <item name="audio_not_sending">Derzeit erfolgt keine Sendung.</item>
     <item name="audio_queue_empty">Die Warteschlange ist bereits leer.</item>
     <item name="audio_queue_cleared">:dash: Die Warteschlange wurde geleert.</item>
+    <item name="audio_paused">:pause_button: Sendung angehalten.</item>
+    <item name="audio_resumed">:play_pause: Sendung fortgesetzt.</item>
+    <item name="audio_skipped"></item>
 
     <item name="error_not_found_in_category">Keine Befehle für diese Kategorie gefunden.</item>
     <item name="error_need_tobe_in_channel">Du musst mit einem Sprachkanal verbunden sein!</item>

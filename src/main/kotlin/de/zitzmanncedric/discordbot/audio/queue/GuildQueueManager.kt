@@ -36,7 +36,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
         audioPlayer.addListener(this)
     }
 
-    fun enqueue(track: AudioTrack): Mono<Void> {
+    private fun enqueue(track: AudioTrack): Mono<Void> {
         return Mono.create {
 
             if (!audioPlayer.startTrack(track, true)) {
@@ -45,9 +45,16 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
             }
         }
     }
-    fun enqueuePlaylist(list: AudioPlaylist) {
-        // TODO
-        sendEnqueuedListInfo(list.tracks.size)
+    private fun enqueuePlaylist(list: AudioPlaylist) {
+        list.tracks.forEach { track -> run {
+            queue.offer(track)
+        }}.also {
+            sendEnqueuedListInfo(list.tracks.size)
+        }
+
+        if(audioPlayer.playingTrack == null) {
+            next()
+        }
     }
 
     fun next(){
@@ -55,6 +62,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
             audioPlayer.startTrack(queue.take(), true)
         }
     }
+
     fun skip(amount: Int){
         val count = when {
             queue.size <= amount -> amount-queue.size
@@ -81,11 +89,11 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     }
 
     override fun onPlayerPause(player: AudioPlayer?) {
-
+        Messages.sendText(Lang.getString("audio_paused"), VoiceHandler.getTextChannel(guild)!!).subscribe()
     }
 
     override fun onPlayerResume(player: AudioPlayer?) {
-
+        Messages.sendText(Lang.getString("audio_resumed"), VoiceHandler.getTextChannel(guild)!!).subscribe()
     }
 
     override fun loadFailed(exception: FriendlyException?) {
