@@ -1,6 +1,7 @@
 # Project exclude paths
 /.gradle/
 /.idea/
+/META-INF/
 
 # Directories of tests
 /logs/
