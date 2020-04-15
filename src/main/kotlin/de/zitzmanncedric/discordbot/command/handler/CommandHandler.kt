@@ -1,7 +1,9 @@
 package de.zitzmanncedric.discordbot.command.handler
 
+import de.zitzmanncedric.discordbot.command.Category
 import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.sender.ConsoleSender
+import de.zitzmanncedric.discordbot.command.sender.DiscordSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.language.Lang
@@ -52,7 +54,7 @@ object CommandHandler {
 
             try {
                 val command: Command? = commands[cmdName]
-                if (command == null) {
+                if (command == null || (command.category == Category.HIDDEN && sender is DiscordSender)) {
                     sender.sendError(Lang.getString("error_cmd_not_found").replace("%name%", cmdName)).subscribe()
                 } else {
                     if((sender is ConsoleSender) && !command.consoleOptimised) {
@@ -62,6 +64,9 @@ object CommandHandler {
                     }
                 }
             } catch (ignored: KotlinNullPointerException){ }
+            catch (ex: Exception){
+                ex.printStackTrace()
+            }
 
             --activeThreads
         }

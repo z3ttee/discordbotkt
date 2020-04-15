@@ -1,6 +1,7 @@
 package de.zitzmanncedric.discordbot.command.commands
 
 import de.zitzmanncedric.discordbot.audio.VoiceHandler
+import de.zitzmanncedric.discordbot.audio.queue.GuildQueueManager
 import de.zitzmanncedric.discordbot.command.Category
 import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.sender.DiscordSender
@@ -12,7 +13,7 @@ import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.VoiceChannel
 import java.net.URL
 
-class CmdPlay: Command("play", "", Lang.getString("cmd_play_description"), Category.MUSIC) {
+class CmdPlay: Command("play", "<url | query>", Lang.getString("cmd_play_description"), Category.MUSIC) {
 
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
         sender as DiscordSender
@@ -36,19 +37,20 @@ class CmdPlay: Command("play", "", Lang.getString("cmd_play_description"), Categ
             }
         }
 
-        if(args.size == 0){
-            // TODO: Resume music
+        val queueManager: GuildQueueManager = VoiceHandler.getQueueManager(guild)!!
+
+        if(args.size == 0 && queueManager.audioPlayer.isPaused){
+            queueManager.audioPlayer.isPaused = false
             return
         }
 
         if(args.size == 1) {
             val url = args[0]
-            VoiceHandler.playSource(guild, URL(url))
             message!!.delete().subscribe()
+            VoiceHandler.playSource(guild, URL(url))
             return
         }
 
         // TODO: Search on youtube
-
     }
 }

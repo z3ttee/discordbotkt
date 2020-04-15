@@ -16,6 +16,9 @@
     <item name="audio_requested_by">Hinzugefügt von %username%</item>
     <item name="audio_enqueued_track">:white_check_mark: :clipboard: ` %title% ` zur Warteschlange ` Position: %position% ` hinzugefügt.</item>
     <item name="audio_enqueued_list">:white_check_mark: :clipboard: ` %amount% ` Sendungen zur Warteschlange hinzugefügt.</item>
+    <item name="audio_not_sending">Derzeit erfolgt keine Sendung.</item>
+    <item name="audio_queue_empty">Die Warteschlange ist bereits leer.</item>
+    <item name="audio_queue_cleared">:dash: Die Warteschlange wurde geleert.</item>
 
     <item name="error_not_found_in_category">Keine Befehle für diese Kategorie gefunden.</item>
     <item name="error_need_tobe_in_channel">Du musst mit einem Sprachkanal verbunden sein!</item>
@@ -28,4 +31,6 @@
     <item name="cmd_join_description">Tritt einem Sprachkanal bei</item>
     <item name="cmd_leave_description">Schließt die Verbindung zu einem Sprachkanal</item>
     <item name="cmd_play_description">Spielt Musik ab</item>
+    <item name="cmd_clear_description">Spielt Musik ab</item>
+    <item name="cmd_pause_description">Spielt Musik ab</item>
 </strings>
