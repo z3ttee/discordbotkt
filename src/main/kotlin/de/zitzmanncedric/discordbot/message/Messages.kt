@@ -17,6 +17,7 @@ object Messages {
         return channel.createMessage(createError(content))
     }
     fun sendException(ex: Exception, channel: MessageChannel): Mono<Message> {
+        ex.printStackTrace()
         return channel.createMessage(createException(ex))
     }
     fun sendTextWithEmbed(content: String, embedSpec: Consumer<in EmbedCreateSpec>, channel: MessageChannel): Mono<Message> {

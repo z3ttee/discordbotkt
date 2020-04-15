@@ -59,7 +59,6 @@ object CommandHandler {
             } catch (ignored: KotlinNullPointerException){ }
 
             --activeThreads
-            Thread.currentThread().interrupt()
         }
         ++activeThreads
         thread.name = "bot-commandhandler-$activeThreads"

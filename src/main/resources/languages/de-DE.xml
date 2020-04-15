@@ -3,11 +3,19 @@
     <item name="channel_joined">:mega: Stimmenkanal betreten.</item>
     <item name="channel_left">:wave: Stimmenkanal wurde verlassen.</item>
     <item name="channel_already_connected">Ich bin bereits mit einem Sprachkanal verbunden!</item>
+    <item name="channel_not_connected">Ich bin mit keinem Sprachkanal verbunden!</item>
     <item name="channel_bound">:white_check_mark: Musikbot an den Kanal ` %channel% ` gebunden.</item>
 
     <item name ="headline_help">Hilfecenter &amp; Befehlübersicht</item>
 
     <item name="paragraph_overview">Hier ist die von dir angeforderte Übersicht über alle Befehle</item>
+
+    <item name="audio_now_playing">:notes: Aktuelle Sendung :notes:</item>
+    <item name="audio_channel">Sender</item>
+    <item name="audio_duration">Laufzeit</item>
+    <item name="audio_requested_by">Hinzugefügt von %username%</item>
+    <item name="audio_enqueued_track">:white_check_mark: :clipboard: ` %title% ` zur Warteschlange ` Position: %position% ` hinzugefügt.</item>
+    <item name="audio_enqueued_list">:white_check_mark: :clipboard: ` %amount% ` Sendungen zur Warteschlange hinzugefügt.</item>
 
     <item name="error_not_found_in_category">Keine Befehle für diese Kategorie gefunden.</item>
     <item name="error_need_tobe_in_channel">Du musst mit einem Sprachkanal verbunden sein!</item>
@@ -17,5 +25,7 @@
     <item name="error_404">Es konnte nichts gefunden werden</item>
 
     <item name="cmd_help_description">Zeigt den Hilfecenter</item>
-    <item name="cmd_join_description">Lässt den Bot einem Sprachkanal beitreten</item>
+    <item name="cmd_join_description">Tritt einem Sprachkanal bei</item>
+    <item name="cmd_leave_description">Schließt die Verbindung zu einem Sprachkanal</item>
+    <item name="cmd_play_description">Spielt Musik ab</item>
 </strings>

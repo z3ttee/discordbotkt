@@ -1,16 +1,12 @@
 package de.zitzmanncedric.discordbot.audio
 
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
-import de.zitzmanncedric.discordbot.BotCore
-import de.zitzmanncedric.discordbot.audio.queue.AudioResultHandler
+import de.zitzmanncedric.discordbot.audio.queue.GuildQueueManager
 import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.MessageChannel
-import discord4j.core.`object`.entity.TextChannel
 import discord4j.core.`object`.entity.VoiceChannel
 import discord4j.voice.VoiceConnection
 import org.slf4j.Logger
@@ -21,30 +17,27 @@ import java.net.URL
 object VoiceHandler {
     private val logger: Logger = LoggerFactory.getLogger(VoiceHandler::class.java)
 
-    val activeConnections: HashMap<Guild, VoiceConnection> = HashMap()
-    val textChannels: HashMap<Guild, MessageChannel> = HashMap()
-
     val playerManager: AudioPlayerManager = DefaultAudioPlayerManager()
-    val audioPlayer: AudioPlayer = playerManager.createPlayer()
-    val audioProvider: discord4j.voice.AudioProvider = AudioProvider(audioPlayer)
 
-    init {
-        AudioSourceManagers.registerRemoteSources(playerManager)
-        //TODO: AudioSourceManagers.registerLocalSource(playerManager)
-    }
+    val activeConnections: HashMap<Guild, VoiceConnection> = HashMap()
+    val queueManagers: HashMap<Guild, GuildQueueManager> = HashMap()
+    val textChannels: HashMap<Guild, MessageChannel> = HashMap()
 
     fun createConnection(guild: Guild, channel: VoiceChannel, textChannel: MessageChannel): Mono<Boolean> {
         return Mono.create {
             try {
+                queueManagers[guild] = GuildQueueManager(guild, playerManager.createPlayer())
+
                 val connection: VoiceConnection? = channel.join { joinSpec ->
                     run {
-                        joinSpec.setProvider(audioProvider)
+                        joinSpec.setProvider(getQueueManager(guild)!!.audioProvider)
                     }
                 }.block()
 
                 if(connection != null) {
                     activeConnections[guild] = connection
                     textChannels[guild] = textChannel
+
                     logger.info("createConnection(): Voice connection established.")
                     it.success(true)
                 } else {
@@ -65,9 +58,8 @@ object VoiceHandler {
                     // TODO: Clear and stop music queue
                 }
             }
-            if (textChannels.containsKey(guild)) {
-                textChannels.remove(guild)
-            }
+            textChannels.remove(guild)
+            queueManagers.remove(guild)
 
             it.success(true)
         }
@@ -83,10 +75,12 @@ object VoiceHandler {
     fun setTextChannel(guild: Guild, channel: MessageChannel) {
         textChannels[guild] = channel
     }
+    fun getQueueManager(guild: Guild): GuildQueueManager? {
+        return queueManagers[guild]
+    }
 
     fun playSource(guild: Guild, url: URL) {
-        val resultHandler: AudioResultHandler = AudioResultHandler(guild, audioPlayer)
-        playerManager.loadItem(url.toString(), resultHandler)
+        playerManager.loadItem(url.toString(), getQueueManager(guild))
     }
 
 }
