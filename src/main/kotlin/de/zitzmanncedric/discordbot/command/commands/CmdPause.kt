@@ -22,7 +22,7 @@ class CmdPause: Command("pause", "", Lang.getString("cmd_pause_description"), Ca
 
         val queueManager: GuildQueueManager = VoiceHandler.getQueueManager(guild)!!
 
-        if(queueManager.queue.isEmpty()) {
+        if(queueManager.queue.isEmpty() && queueManager.audioPlayer.playingTrack == null) {
             sender.sendError(Lang.getString("audio_not_sending")).subscribe()
             return
         }

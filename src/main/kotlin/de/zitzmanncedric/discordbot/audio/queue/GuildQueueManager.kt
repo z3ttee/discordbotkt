@@ -2,8 +2,6 @@ package de.zitzmanncedric.discordbot.audio.queue
 
 import com.sedmelluq.discord.lavaplayer.player.AudioLoadResultHandler
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
-import com.sedmelluq.discord.lavaplayer.player.AudioPlayerManager
-import com.sedmelluq.discord.lavaplayer.player.DefaultAudioPlayerManager
 import com.sedmelluq.discord.lavaplayer.player.event.AudioEventAdapter
 import com.sedmelluq.discord.lavaplayer.source.AudioSourceManagers
 import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
@@ -24,10 +22,9 @@ import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
 class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEventAdapter(), AudioLoadResultHandler {
-    private val logger: Logger = LoggerFactory.getLogger(GuildQueueManager::class.java)
 
     val audioProvider: discord4j.voice.AudioProvider = AudioProvider(audioPlayer)
-    val queue: BlockingQueue<AudioTrack> = LinkedBlockingQueue()
+    var queue: BlockingQueue<AudioTrack> = LinkedBlockingQueue()
     var lastInfoMessage: Message? = null
 
     init {
@@ -38,7 +35,6 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
 
     private fun enqueue(track: AudioTrack): Mono<Void> {
         return Mono.create {
-
             if (!audioPlayer.startTrack(track, true)) {
                 queue.offer(track)
                 sendEnqueuedInfo(track)
@@ -58,24 +54,35 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     }
 
     fun next(){
-        if(!queue.isEmpty()) {
-            audioPlayer.startTrack(queue.take(), true)
+        if(queue.isNotEmpty()) {
+            audioPlayer.startTrack(queue.take(), false)
+        } else {
+            audioPlayer.stopTrack()
         }
     }
 
-    fun skip(amount: Int){
-        val count = when {
-            queue.size <= amount -> amount-queue.size
-            else -> amount
-        }
-
-        if(count > 1) {
-            for(i in 0 until count) {
-                queue.remove()
+    fun skip(amount: Int): Mono<Void> {
+        return Mono.create {
+            val count = when {
+                queue.size <= amount -> queue.size
+                else -> amount
             }
-        }
 
-        next()
+            if(count > 1) {
+                queue = LinkedBlockingQueue(queue.filterIndexed { index, _ -> index+1 !in 0..amount })
+            }
+
+            next()
+            Messages.sendText(Lang.getString("audio_skipped"), VoiceHandler.getTextChannel(guild)!!).subscribe()
+        }
+    }
+
+    fun stop(): Mono<Void> {
+        return Mono.create {
+            queue.clear()
+            audioPlayer.stopTrack()
+
+        }
     }
 
     override fun onTrackStart(player: AudioPlayer?, track: AudioTrack?) {
@@ -115,8 +122,12 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     }
 
     private fun sendInfoMessage(track: AudioTrack){
-
         if(!track.info.isStream) {
+
+            if(lastInfoMessage != null) {
+                lastInfoMessage!!.delete().subscribe()
+            }
+
             val duration: Duration = Duration.ofMillis(track.duration)
             val hours: Long = duration.toHours()
             val min: Long = duration.toMinutes()

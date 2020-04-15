@@ -21,7 +21,8 @@
     <item name="audio_queue_cleared">:dash: Die Warteschlange wurde geleert.</item>
     <item name="audio_paused">:pause_button: Sendung angehalten.</item>
     <item name="audio_resumed">:play_pause: Sendung fortgesetzt.</item>
-    <item name="audio_skipped"></item>
+    <item name="audio_skipped">:track_next: Sendung übersprungen.</item>
+    <item name="audio_searching_yt">:mag::man_detective: Es wird auf YouTube nach ` %query% ` gesucht...</item>
 
     <item name="error_not_found_in_category">Keine Befehle für diese Kategorie gefunden.</item>
     <item name="error_need_tobe_in_channel">Du musst mit einem Sprachkanal verbunden sein!</item>
@@ -29,11 +30,16 @@
     <item name="error_cmd_usage">Meintest du vielleicht ` %usage% ` ?</item>
     <item name="error_voice_not_found">:mag: Sprachkanal nicht gefunden.</item>
     <item name="error_404">Es konnte nichts gefunden werden</item>
+    <item name="error_check_input_for">Überprüfe deine Eingabe für ` %usage% `!</item>
+    <item name="error_nothing_to_skip">Nichts zum überspringen gefunden. Ist die Warteschlange leer?</item>
+    <item name="error_check_skip_amount">Es können maximal %amount% Lieder gleichzeitig übersprungen werden.</item>
+    <item name="error_yt_deactivated">Die YouTube-Suche ist derzeit nicht aktiv.</item>
 
     <item name="cmd_help_description">Zeigt den Hilfecenter</item>
     <item name="cmd_join_description">Tritt einem Sprachkanal bei</item>
     <item name="cmd_leave_description">Schließt die Verbindung zu einem Sprachkanal</item>
     <item name="cmd_play_description">Spielt Musik ab</item>
     <item name="cmd_clear_description">Spielt Musik ab</item>
-    <item name="cmd_pause_description">Spielt Musik ab</item>
+    <item name="cmd_pause_description">Pausiert die Musik</item>
+    <item name="cmd_skip_description">Überspringt ein/mehrere Lied/er</item>
 </strings>
