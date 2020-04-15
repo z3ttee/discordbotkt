@@ -1,6 +1,7 @@
 package de.zitzmanncedric.discordbot.command.handler
 
 import de.zitzmanncedric.discordbot.command.Command
+import de.zitzmanncedric.discordbot.command.sender.ConsoleSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.language.Lang
@@ -54,7 +55,11 @@ object CommandHandler {
                 if (command == null) {
                     sender.sendError(Lang.getString("error_cmd_not_found").replace("%name%", cmdName)).subscribe()
                 } else {
-                    command.execute(sender, eventMessage, guild, query)
+                    if((sender is ConsoleSender) && !command.consoleOptimised) {
+                        sender.sendError("This command is not available for console input.")
+                    } else {
+                        command.execute(sender, eventMessage, guild, query)
+                    }
                 }
             } catch (ignored: KotlinNullPointerException){ }
 

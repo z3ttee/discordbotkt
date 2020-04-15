@@ -3,7 +3,6 @@ package de.zitzmanncedric.discordbot.command.commands
 import de.zitzmanncedric.discordbot.audio.VoiceHandler
 import de.zitzmanncedric.discordbot.command.Category
 import de.zitzmanncedric.discordbot.command.Command
-import de.zitzmanncedric.discordbot.command.sender.ConsoleSender
 import de.zitzmanncedric.discordbot.command.sender.DiscordSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.language.Lang
@@ -16,12 +15,6 @@ class CmdJoin: Command("join", "(channel)", "Lässt den Bot in einen Sprachkanal
     private val logger: Logger = LoggerFactory.getLogger(CmdJoin::class.java)
 
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
-        if(sender is ConsoleSender) {
-            sender.sendError("This command is not available for console input.")
-            return
-        }
-
-        // Make sender a discord sender
         sender as DiscordSender
 
         if(args.size > 1) {

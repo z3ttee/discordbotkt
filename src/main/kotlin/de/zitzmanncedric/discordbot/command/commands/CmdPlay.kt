@@ -3,8 +3,6 @@ package de.zitzmanncedric.discordbot.command.commands
 import de.zitzmanncedric.discordbot.audio.VoiceHandler
 import de.zitzmanncedric.discordbot.command.Category
 import de.zitzmanncedric.discordbot.command.Command
-import de.zitzmanncedric.discordbot.command.handler.CommandHandler
-import de.zitzmanncedric.discordbot.command.sender.ConsoleSender
 import de.zitzmanncedric.discordbot.command.sender.DiscordSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.language.Lang
@@ -12,19 +10,11 @@ import discord4j.core.`object`.VoiceState
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.VoiceChannel
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import java.net.URL
 
 class CmdPlay: Command("play", "", Lang.getString("cmd_play_description"), Category.MUSIC) {
-    private val logger: Logger = LoggerFactory.getLogger(CmdPlay::class.java)
 
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
-        if(sender is ConsoleSender) {
-            sender.sendError("This command is not available for console input.")
-            return
-        }
-
         sender as DiscordSender
 
         if(!VoiceHandler.hasConnection(guild!!)) {
