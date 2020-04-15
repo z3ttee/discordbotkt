@@ -18,6 +18,12 @@ dependencies {
     implementation("ch.qos.logback:logback-classic:1.2.3")
     implementation("org.yaml:snakeyaml:1.26")
     implementation("org.reflections:reflections:0.9.12")
+    implementation("commons-validator:commons-validator:1.6")
+
+    // Google API
+    implementation("com.google.api-client:google-api-client:1.23.0")
+    implementation("com.google.oauth-client:google-oauth-client-jetty:1.23.0")
+    implementation("com.google.apis:google-api-services-youtube:v3-rev221-1.25.0")
 }
 
 tasks {
