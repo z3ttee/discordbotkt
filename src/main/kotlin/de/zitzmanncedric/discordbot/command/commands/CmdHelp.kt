@@ -21,25 +21,28 @@ class CmdHelp : Command("help", "", Lang.getString("cmd_help_description"), Cate
                 embed.setDescription(Lang.getString("paragraph_overview"))
 
                 for(category in Category.values()) {
-                    val title = "${category.emoji} ${category.title}"
-                    var content = Lang.getString("error_not_found_in_category")
-                    // TODO: Add prefix
+                    if(category != Category.HIDDEN) {
+                        val title = "${category.emoji} ${category.title}"
+                        var content = Lang.getString("error_not_found_in_category")
+                        // TODO: Add prefix
 
-                    val commands = ArrayList<Command>(CommandHandler.commands.values.filter { it.category == category })
-                    if(commands.isNotEmpty()){
-                        content = ""
-                        
-                        for(command in commands) {
-                            val usage = when (command.usage.isEmpty() || command.usage.isBlank()) {
-                                true -> ""
-                                else -> "${command.usage} "
+                        val commands =
+                            ArrayList<Command>(CommandHandler.commands.values.filter { it.category == category })
+                        if (commands.isNotEmpty()) {
+                            content = ""
+
+                            for (command in commands) {
+                                val usage = when (command.usage.isEmpty() || command.usage.isBlank()) {
+                                    true -> ""
+                                    else -> "${command.usage} "
+                                }
+
+                                content += "` ${command.name} $usage`: ${command.description} \n"
                             }
-
-                            content += "` ${command.name} $usage`: ${command.description} \n"
                         }
-                    }
 
-                    embed.addField(title, content, false)
+                        embed.addField(title, content, false)
+                    }
                 }
 
             }}).subscribe()
