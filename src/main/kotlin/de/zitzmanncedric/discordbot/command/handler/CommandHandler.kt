@@ -24,7 +24,7 @@ object CommandHandler {
 
     fun registerCommands(){
         try {
-            val reflections = Reflections(Command::class.java.packageName + ".commands", SubTypesScanner(true))
+            val reflections = Reflections(arrayOf("de.zitzmanncedric.command.commands"), SubTypesScanner(false))
             val classSet = reflections.getSubTypesOf(Command::class.java)
 
             classSet.forEach { cmdClass ->
