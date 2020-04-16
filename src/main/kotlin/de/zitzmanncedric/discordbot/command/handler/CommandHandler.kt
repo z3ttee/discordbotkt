@@ -9,10 +9,13 @@ import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.language.Lang
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
+import org.apache.commons.beanutils.converters.URLConverter
 import org.reflections.Reflections
 import org.reflections.scanners.SubTypesScanner
+import org.reflections.util.ConfigurationBuilder
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
+import java.net.URL
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -24,7 +27,7 @@ object CommandHandler {
 
     fun registerCommands(){
         try {
-            val reflections = Reflections(arrayOf("de.zitzmanncedric.command.commands"), SubTypesScanner(false))
+            val reflections = Reflections("de.zitzmanncedric.discordbot.command.commands")
             val classSet = reflections.getSubTypesOf(Command::class.java)
 
             classSet.forEach { cmdClass ->
