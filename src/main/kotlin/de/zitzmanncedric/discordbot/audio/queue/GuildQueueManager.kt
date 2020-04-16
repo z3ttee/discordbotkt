@@ -14,10 +14,7 @@ import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 import reactor.core.publisher.Mono
-import java.time.Duration
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
 
@@ -131,10 +128,23 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
                 lastInfoMessage!!.delete().subscribe()
             }
 
-            val duration: Duration = Duration.ofMillis(track.duration)
-            val hours: Long = duration.toHours()
-            val min: Long = duration.toMinutes()
-            val sec: Long = duration.toSeconds()
+            var millis = track.duration
+            var hours = 0
+            var min = 0
+            var sec = 0
+
+            while(millis >= 1000){
+                ++sec
+                millis -= 1000
+            }
+            while(sec >= 60){
+                ++min
+                sec -= 60
+            }
+            while(min >= 60){
+                ++hours
+                min -= 60
+            }
 
             var h: String = hours.toString()
             var m: String = min.toString()
@@ -145,7 +155,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
             if(s.length <= 1) s = "0$s"
 
             val d: String = when (hours) {
-                0L -> "${m}:${s}"
+                0 -> "${m}:${s}"
                 else -> "${h}:${m}:${s}"
             }
 

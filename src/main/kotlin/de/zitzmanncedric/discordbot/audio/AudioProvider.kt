@@ -4,6 +4,7 @@ import com.sedmelluq.discord.lavaplayer.format.StandardAudioDataFormats
 import com.sedmelluq.discord.lavaplayer.player.AudioPlayer
 import com.sedmelluq.discord.lavaplayer.track.playback.MutableAudioFrame
 import discord4j.voice.AudioProvider
+import java.nio.Buffer
 import java.nio.ByteBuffer
 
 class AudioProvider(private val player: AudioPlayer) : AudioProvider(ByteBuffer.allocate(StandardAudioDataFormats.DISCORD_OPUS.maximumChunkSize())) {
@@ -19,7 +20,7 @@ class AudioProvider(private val player: AudioPlayer) : AudioProvider(ByteBuffer.
         val didProvide: Boolean = player.provide(frame)
         // If audio was provided, flip from write-mode to read-mode
         if (didProvide) {
-            buffer.flip()
+            (buffer as Buffer).flip()
         }
         return didProvide
     }
