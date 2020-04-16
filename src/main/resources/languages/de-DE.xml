@@ -9,6 +9,7 @@
     <item name ="headline_help">Hilfecenter &amp; Befehlübersicht</item>
 
     <item name="paragraph_overview">Hier ist die von dir angeforderte Übersicht über alle Befehle</item>
+    <item name="paragraph_overview_sent">:white_check_mark: :calling: Ich habe dir eine Übersicht per DM geschickt.</item>
 
     <item name="audio_now_playing">:notes: Aktuelle Sendung :notes:</item>
     <item name="audio_channel">Sender</item>
@@ -22,6 +23,7 @@
     <item name="audio_paused">:pause_button: Sendung angehalten.</item>
     <item name="audio_resumed">:play_pause: Sendung fortgesetzt.</item>
     <item name="audio_skipped">:track_next: Sendung übersprungen.</item>
+    <item name="audio_stopped">:stop_button: :dash: Sendung wurde gestoppt und die Warteschlange geleert.</item>
     <item name="audio_searching_yt">:mag::man_detective: Es wird auf YouTube nach ` %query% ` gesucht...</item>
 
     <item name="error_not_found_in_category">Keine Befehle für diese Kategorie gefunden.</item>
@@ -34,12 +36,16 @@
     <item name="error_nothing_to_skip">Nichts zum überspringen gefunden. Ist die Warteschlange leer?</item>
     <item name="error_check_skip_amount">Es können maximal %amount% Lieder gleichzeitig übersprungen werden.</item>
     <item name="error_yt_deactivated">Die YouTube-Suche ist derzeit nicht aktiv.</item>
+    <item name="error_text_mention_required">Du musst den Kanal als Mention übergeben</item>
+    <item name="error_channel_text_required">Der gewählte Kanal ist kein Textkanal!</item>
 
     <item name="cmd_help_description">Zeigt den Hilfecenter</item>
     <item name="cmd_join_description">Tritt einem Sprachkanal bei</item>
     <item name="cmd_leave_description">Schließt die Verbindung zu einem Sprachkanal</item>
     <item name="cmd_play_description">Spielt Musik ab</item>
-    <item name="cmd_clear_description">Spielt Musik ab</item>
+    <item name="cmd_clear_description">Leert die Warteschlange</item>
     <item name="cmd_pause_description">Pausiert die Musik</item>
     <item name="cmd_skip_description">Überspringt ein/mehrere Lied/er</item>
+    <item name="cmd_bind_description">Bindet den Musikbot an einen Textkanal</item>
+    <item name="cmd_stop_description">Stoppt die Musik und leert die Warteschlange</item>
 </strings>

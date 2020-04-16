@@ -45,6 +45,11 @@ class CmdPlay: Command("play", "<url | query>", Lang.getString("cmd_play_descrip
         if(args.size == 0 && queueManager.audioPlayer.isPaused){
             queueManager.audioPlayer.isPaused = false
             return
+        } else {
+            if(args.size == 0){
+                sendUsage(sender)
+                return
+            }
         }
 
         if(queueManager.audioPlayer.isPaused) queueManager.audioPlayer.isPaused = false

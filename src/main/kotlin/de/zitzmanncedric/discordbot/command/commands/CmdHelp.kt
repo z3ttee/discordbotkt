@@ -14,6 +14,7 @@ class CmdHelp : Command("help", "", Lang.getString("cmd_help_description"), Cate
 
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
         if(sender is DiscordSender){
+            sender.sendText(Lang.getString("paragraph_overview_sent")).subscribe()
             sender.private().sendTextWitEmbed(Lang.getString("headline_help"), Consumer { embed -> run {
                 embed.setDescription(Lang.getString("paragraph_overview"))
 
@@ -23,18 +24,17 @@ class CmdHelp : Command("help", "", Lang.getString("cmd_help_description"), Cate
                         var content = Lang.getString("error_not_found_in_category")
                         // TODO: Add prefix
 
-                        val commands =
-                            ArrayList<Command>(CommandHandler.commands.values.filter { it.category == category })
+                        val commands = ArrayList<Command>(CommandHandler.commands.values.filter { it.category == category })
                         if (commands.isNotEmpty()) {
                             content = ""
 
                             for (command in commands) {
-                                val usage = when (command.usage.isEmpty() || command.usage.isBlank()) {
+                                val usage = when (command.usage.isEmpty()) {
                                     true -> ""
                                     else -> "${command.usage} "
                                 }
 
-                                content += "` ${command.name} $usage`: ${command.description} \n"
+                                content = "$content ` ${command.name} $usage`: ${command.description} \n"
                             }
                         }
 
@@ -52,7 +52,7 @@ class CmdHelp : Command("help", "", Lang.getString("cmd_help_description"), Cate
             sender.sendText(">> ${category.title}")
 
             for(command in CommandHandler.commands.values){
-                if(command.category == category){
+                if(command.category == category && command.consoleOptimised){
                     val usage = when(command.usage.isEmpty() || command.usage.isBlank()) {
                         true -> ""
                         else -> "${command.usage} "

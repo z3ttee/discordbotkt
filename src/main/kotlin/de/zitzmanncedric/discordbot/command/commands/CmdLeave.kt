@@ -19,6 +19,7 @@ class CmdLeave: Command("leave", "", Lang.getString("cmd_leave_description"), Ca
             return
         }
 
+        VoiceHandler.getQueueManager(guild)!!.stop().subscribe()
         VoiceHandler.closeConnection(guild).subscribe {
             if(it) sender.sendText(Lang.getString("channel_left")).subscribe()
         }

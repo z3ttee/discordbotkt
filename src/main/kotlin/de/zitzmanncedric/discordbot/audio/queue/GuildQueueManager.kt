@@ -38,9 +38,11 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
             if (!audioPlayer.startTrack(track, true)) {
                 queue.offer(track)
                 sendEnqueuedInfo(track)
+                it.success()
             }
         }
     }
+
     private fun enqueuePlaylist(list: AudioPlaylist) {
         list.tracks.forEach { track -> run {
             queue.offer(track)
@@ -74,6 +76,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
 
             next()
             Messages.sendText(Lang.getString("audio_skipped"), VoiceHandler.getTextChannel(guild)!!).subscribe()
+            it.success()
         }
     }
 
@@ -81,7 +84,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
         return Mono.create {
             queue.clear()
             audioPlayer.stopTrack()
-
+            it.success()
         }
     }
 
