@@ -97,13 +97,13 @@ class BotCore(token: String, ytapikey: String) {
         // loading configs
         MainConfig.create()
 
-        // registering commands
-        ConsoleHandler.start()
-        CommandHandler.registerCommands()
-
         // load language
         // TODO: Make it an option via command and config
         Lang.initialize(Language.DE)
+
+        // registering commands
+        ConsoleHandler.start()
+        CommandHandler.registerCommands()
 
         // creating instance of client
         discordClient = DiscordClient.create(token)
