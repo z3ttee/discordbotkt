@@ -8,14 +8,15 @@ import discord4j.core.event.domain.message.MessageUpdateEvent
 class MessageEventListener {
 
     fun onMessage(event: MessageCreateEvent){
-        if (!event.message.content.get().startsWith("ss ", false)) return
-        if (event.member.get().isBot) return
+        try {
+            if (!event.message.content.get().startsWith("ss ", false)) return
+            if (event.member.get().isBot) return
 
-        val typing = event.message.channel.block()
-        typing!!.type().block()
+            val typing = event.message.channel.block()
+            typing!!.type().block()
 
-        CommandHandler.handleCommand(event.guild.block(), event.message, event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
-
+            CommandHandler.handleCommand(event.guild.block(), event.message, event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
+        } catch (ignored: Exception){ }
     }
 
     fun onMessageUpdated(event: MessageUpdateEvent) {
