@@ -17,11 +17,6 @@ class CmdJoin: Command("join", "(channel)", "Lässt den Bot in einen Sprachkanal
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
         sender as DiscordSender
 
-        if(args.size > 1) {
-            sendUsage(sender)
-            return
-        }
-
         if(VoiceHandler.hasConnection(guild!!)) {
             sender.sendError(Lang.getString("channel_already_connected")).subscribe()
             return
@@ -45,7 +40,7 @@ class CmdJoin: Command("join", "(channel)", "Lässt den Bot in einen Sprachkanal
                 if(it) sender.sendText(Lang.getString("channel_joined")).subscribe()
             }
         } else {
-            val channelName: String = args[0]
+            val channelName: String = args.joinToString(" ")
 
             // TODO: Check if channel exists
             val availableChannels = guild.channels.filter { it.type == Channel.Type.GUILD_VOICE }.filter { it.name == channelName }
