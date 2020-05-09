@@ -8,13 +8,13 @@ object ConsoleHandler: Thread("bot-console-input") {
     private val logger: Logger = LoggerFactory.getLogger(ConsoleHandler::class.java)
 
     override fun run() {
-        while (true) {
-            try {
+        try {
+            while (true) {
                 val input = readLine()
                 CommandHandler.handleCommand(null, null, input!!, ConsoleSender(null))
-            } catch (ex: KotlinNullPointerException){
-                logger.warn("run(): An error occured within the console command handler. This means, command input through java console may not be possible.")
             }
+        } catch (ex: KotlinNullPointerException){
+            logger.warn("run(): An error occured within the console command handler. This means, command input through java console may not be possible.")
         }
     }
 
