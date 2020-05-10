@@ -14,6 +14,7 @@
     <item name="audio_now_playing">:notes: Aktuelle Sendung :notes:</item>
     <item name="audio_channel">Sender</item>
     <item name="audio_duration">Laufzeit</item>
+    <item name="audio_settings">Einstellungen</item>
     <item name="audio_requested_by">Hinzugefügt von %username%</item>
     <item name="audio_enqueued_track">:white_check_mark: :clipboard: ` %title% ` zur Warteschlange ` Position: %position% ` hinzugefügt.</item>
     <item name="audio_enqueued_list">:white_check_mark: :clipboard: ` %amount% ` Sendungen zur Warteschlange hinzugefügt.</item>
@@ -23,6 +24,10 @@
     <item name="audio_paused">:pause_button: Sendung angehalten.</item>
     <item name="audio_resumed">:play_pause: Sendung fortgesetzt.</item>
     <item name="audio_skipped">:track_next: Sendung übersprungen.</item>
+    <item name="audio_looped">:repeat: Wiederholungsschleife aktiviert.</item>
+    <item name="audio_loop_deactivated">:repeat: Wiederholungsschleife deaktiviert.</item>
+    <item name="audio_shuffled">:twisted_rightwards_arrows: Zufallswiedergabe aktiviert.</item>
+    <item name="audio_shuffle_deactivated">:twisted_rightwards_arrows: Zufallswiedergabe deaktiviert.</item>
     <item name="audio_stopped">:stop_button: :dash: Sendung wurde gestoppt und die Warteschlange geleert.</item>
     <item name="audio_searching_yt">:mag::man_detective: Es wird auf YouTube nach ` %query% ` gesucht...</item>
 
@@ -48,4 +53,7 @@
     <item name="cmd_skip_description">Überspringt ein/mehrere Lied/er</item>
     <item name="cmd_bind_description">Bindet den Musikbot an einen Textkanal</item>
     <item name="cmd_stop_description">Stoppt die Musik und leert die Warteschlange</item>
+
+    <item name="info_looped">:repeat:</item>
+    <item name="info_shuffle">:twisted_rightwards_arrows:</item>
 </strings>
