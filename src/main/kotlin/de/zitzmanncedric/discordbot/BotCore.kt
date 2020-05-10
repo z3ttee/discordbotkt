@@ -63,6 +63,7 @@ class BotCore(token: String, ytapikey: String) {
         var discordClient: DiscordClient? = null
         var ytSearchEnabled: Boolean = false
         var ytkey : String = ""
+        var avatarURL: String = ""
 
         private val APPLICATION_NAME = "SyndicateBot Discord"
         private val JSON_FACTORY: JsonFactory = JacksonFactory.getDefaultInstance()
@@ -107,6 +108,11 @@ class BotCore(token: String, ytapikey: String) {
 
         // creating instance of client
         discordClient = DiscordClient.create(token)
+
+        // Getting avatarURL
+        try {
+            avatarURL = discordClient!!.self.block()!!.avatarUrl
+        } catch (ignored: Exception){ }
 
         // registering events
         discordClient!!.eventDispatcher.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
