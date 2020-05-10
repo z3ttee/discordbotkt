@@ -8,18 +8,15 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
-import de.zitzmanncedric.discordbot.BotCore
 import de.zitzmanncedric.discordbot.audio.AudioProvider
 import de.zitzmanncedric.discordbot.audio.VoiceHandler
 import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
-import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
 import reactor.core.publisher.Mono
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
-import kotlin.properties.Delegates
 
 class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEventAdapter(), AudioLoadResultHandler {
 

@@ -7,9 +7,12 @@
     <item name="channel_bound">:white_check_mark: Musikbot an den Kanal ` %channel% ` gebunden.</item>
 
     <item name ="headline_help">Hilfecenter &amp; Befehlübersicht</item>
+    <item name ="headline_cock_comp">:chicken: Hahn-Vergleich :eyes:</item>
 
     <item name="paragraph_overview">Hier ist die von dir angeforderte Übersicht über alle Befehle</item>
     <item name="paragraph_overview_sent">:white_check_mark: :calling: Ich habe dir eine Übersicht per DM geschickt.</item>
+    <item name="paragraph_who_has_mightiest">Wer hat den prächtigsten Hahn?</item>
+    <item name="paragraph_cock_result">%mention%'s Hahn (%length% cm): </item>
 
     <item name="audio_now_playing">:notes: Aktuelle Sendung :notes:</item>
     <item name="audio_channel">Sender</item>
