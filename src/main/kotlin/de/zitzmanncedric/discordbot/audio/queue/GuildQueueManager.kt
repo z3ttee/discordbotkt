@@ -8,21 +8,27 @@ import com.sedmelluq.discord.lavaplayer.tools.FriendlyException
 import com.sedmelluq.discord.lavaplayer.track.AudioPlaylist
 import com.sedmelluq.discord.lavaplayer.track.AudioTrack
 import com.sedmelluq.discord.lavaplayer.track.AudioTrackEndReason
+import de.zitzmanncedric.discordbot.BotCore
 import de.zitzmanncedric.discordbot.audio.AudioProvider
 import de.zitzmanncedric.discordbot.audio.VoiceHandler
 import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
+import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
 import reactor.core.publisher.Mono
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
+import kotlin.properties.Delegates
 
 class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEventAdapter(), AudioLoadResultHandler {
 
     val audioProvider: discord4j.voice.AudioProvider = AudioProvider(audioPlayer)
+    //TODO: val requests: HashMap<AudioTrack, Member> = HashMap()
     var queue: BlockingQueue<AudioTrack> = LinkedBlockingQueue()
     var lastInfoMessage: Message? = null
+    var shuffle: Boolean = false
+    var loop: Boolean = false
 
     init {
         AudioSourceManagers.registerRemoteSources(VoiceHandler.playerManager)
@@ -54,7 +60,11 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
 
     fun next(){
         if(queue.isNotEmpty()) {
-            audioPlayer.startTrack(queue.take(), false)
+            if(shuffle) {
+                audioPlayer.startTrack(queue.random(), false)
+            } else {
+                audioPlayer.startTrack(queue.take(), false)
+            }
         } else {
             audioPlayer.stopTrack()
         }
@@ -90,9 +100,16 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     }
 
     override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
+        if(track != null && loop) {
+            val loopedTrack: AudioTrack = track.makeClone()
+            audioPlayer.startTrack(loopedTrack, false)
+            return
+        }
+
         if(endReason!!.mayStartNext) {
             next()
         }
+        // requests.remove(track)
     }
 
     override fun onPlayerPause(player: AudioPlayer?) {
@@ -159,6 +176,9 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
                 else -> "${h}:${m}:${s}"
             }
 
+            val looped: Boolean = VoiceHandler.getQueueManager(guild)!!.loop
+            val shuffled: Boolean = VoiceHandler.getQueueManager(guild)!!.shuffle
+
             VoiceHandler.getTextChannel(guild)!!.createMessage { message -> run {
                 message.setContent("**${Lang.getString("audio_now_playing")}**")
                 message.setEmbed { embed -> run {
@@ -166,6 +186,17 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
                     embed.setDescription(" ")
                     embed.addField(Lang.getString("audio_channel"), track.info.author, false)
                     embed.addField(Lang.getString("audio_duration"), d, false)
+
+                    if(looped || shuffled) {
+                        embed.addField(Lang.getString("audio_settings"), when(looped){
+                            true -> Lang.getString("info_looped")+" "
+                            else -> ""
+                        } + when(shuffled){
+                            true -> Lang.getString("info_shuffle")
+                            else -> ""
+                        }, false)
+                    }
+
                     embed.setUrl(track.info.uri)
                 }}
             }}.subscribe { lastInfoMessage = it }
