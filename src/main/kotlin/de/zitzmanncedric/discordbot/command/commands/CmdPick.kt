@@ -7,6 +7,7 @@ import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.language.Lang
 import discord4j.core.`object`.VoiceState
 import discord4j.core.`object`.entity.Guild
+import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.VoiceChannel
 import kotlin.collections.ArrayList
@@ -32,11 +33,14 @@ class CmdPick: Command("pick", "", "Wählt einen Spieler im Sprachkanal", Catego
         channel.voiceStates.buffer().subscribe {
             val states: ArrayList<VoiceState> = ArrayList(it)
 
-            val rndIndex = Random.nextInt(states.size)
-            val pickedState = states[rndIndex]
-            val pickedMember = pickedState.member.block()
+            var pickedMember: Member?
+            do {
+                val rndIndex = Random.nextInt(states.size)
+                val pickedState = states[rndIndex]
+                pickedMember = pickedState.member.block()
+            } while (pickedMember!!.isBot)
 
-            sender.sendText(Lang.getString("paragraph_member_picked").replace("%mention%", pickedMember!!.mention)).subscribe()
+            sender.sendText(Lang.getString("paragraph_member_picked").replace("%mention%", pickedMember.mention)).subscribe()
         }
     }
 }
