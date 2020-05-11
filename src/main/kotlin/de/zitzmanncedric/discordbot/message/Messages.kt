@@ -10,6 +10,9 @@ import java.util.function.Consumer
 
 object Messages {
 
+    fun sendNormalText(content: String, channel: MessageChannel): Mono<Message> {
+        return channel.createMessage(content)
+    }
     fun sendText(content: String, channel: MessageChannel): Mono<Message> {
         return channel.createMessage(createText(content))
     }

@@ -12,6 +12,11 @@ import java.util.function.Consumer
 class ConsoleSender(channel: MessageChannel?) : Sender(channel) {
     private val logger: Logger = LoggerFactory.getLogger(CommandHandler::class.java)
 
+    override fun sendNormalText(content: String): Mono<Message> {
+        logger.info(content)
+        return Mono.empty()
+    }
+
     override fun sendText(content: String): Mono<Message> {
         logger.info(content)
         return Mono.empty()

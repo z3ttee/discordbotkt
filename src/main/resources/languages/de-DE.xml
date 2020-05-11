@@ -14,6 +14,7 @@
     <item name="paragraph_who_has_mightiest">Wer hat den prächtigsten Hahn?</item>
     <item name="paragraph_cock_result">%mention%'s Hahn (%length% cm): </item>
     <item name="paragraph_member_picked">:game_die::white_check_mark: Das Schicksal hat entschieden: %mention% wurde ausgewählt :clap:</item>
+    <item name="paragraph_genius_success">:mag::white_check_mark: Die Suche auf ` Genius.com ` ergab folgende Lyrics:</item>
 
     <item name="audio_now_playing">:notes: Aktuelle Sendung :notes:</item>
     <item name="audio_channel">Sender</item>

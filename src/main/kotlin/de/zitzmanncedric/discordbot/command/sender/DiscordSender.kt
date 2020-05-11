@@ -15,6 +15,10 @@ class DiscordSender(var member: Member, channel: MessageChannel) : Sender(channe
         return this
     }
 
+    override fun sendNormalText(content: String): Mono<Message> {
+        return Messages.sendNormalText(content, channel!!)
+    }
+
     override fun sendText(content: String): Mono<Message> {
         return Messages.sendText(content, channel!!)
     }
