@@ -19,10 +19,7 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import java.io.IOException
 import java.security.GeneralSecurityException
-import java.util.*
-import java.util.concurrent.LinkedBlockingQueue
 import kotlin.system.exitProcess
-
 
 private val logger: Logger = LoggerFactory.getLogger(BotCore::class.java)
 

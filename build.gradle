@@ -25,6 +25,14 @@ dependencies {
     implementation "com.google.api-client:google-api-client:1.23.0"
     implementation "com.google.oauth-client:google-oauth-client-jetty:1.23.0"
     implementation "com.google.apis:google-api-services-youtube:v3-rev221-1.25.0"
+
+    implementation 'com.github.scribejava:scribejava-apis:6.4.1'
+
+    implementation group: 'org.jsoup', name: 'jsoup', version: '1.13.1'
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.6.0'
+    implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
+
+
 }
 
 compileKotlin {
