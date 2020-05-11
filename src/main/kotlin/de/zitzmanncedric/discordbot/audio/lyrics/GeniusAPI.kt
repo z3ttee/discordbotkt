@@ -9,18 +9,10 @@ import org.json.simple.JSONObject
 import org.json.simple.parser.JSONParser
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
-import org.slf4j.Logger
-import org.slf4j.LoggerFactory
 
 object GeniusAPI {
-    private val logger: Logger = LoggerFactory.getLogger(GeniusAPI::class.java)
-
     private const val baseURL: String = "https://genius.com"
     private const val apiURL: String = "https://api.genius.com"
-    /*val authService: OAuth20Service = ServiceBuilder(MainConfig.getString("geniusapi/client_id"))
-        .apiSecret(MainConfig.getString("geniusapi/client_secret"))
-        .scope("me")
-        .build(GeniusApi.instance())*/
     private val accessToken = MainConfig.getString("geniusapi/access_token")
 
     fun getLyricsFor(query: String): GeniusLyrics {
@@ -50,7 +42,6 @@ object GeniusAPI {
             val type: String = (songObject as JSONObject)["type"] as String
 
             if(type == "song"){
-                logger.info("getLyricsFor(): selected.")
                 song = songObject
                 break
             }
@@ -77,10 +68,4 @@ object GeniusAPI {
             lyrics
         }
     }
-}
-
-
-
-interface RequestCallback {
-    fun onFinish(responseCode: Long = 200L, result: String = "", errorMessage: String? = "")
 }
