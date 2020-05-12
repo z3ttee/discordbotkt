@@ -17,7 +17,13 @@ class CmdCock: Command("cock", "(@Mention) (@Mention...)", "", Category.FUN) {
     private val minLength: Int = 1
 
     override fun execute(sender: Sender, message: Message?, guild: Guild?, args: ArrayList<String>) {
+
         if(args.size == 0 || args.size == 1){
+            if(args.size == 1 && message!!.userMentions.blockFirst() == null) {
+                sender.sendError(Lang.getString("error_mention_required")).subscribe()
+                return
+            }
+
             val member: Member = when(args.size == 1) {
                 true -> message!!.userMentions.blockFirst()!!.asMember(guild!!.id).block()!!
                 else -> message!!.authorAsMember.block()!!
@@ -35,7 +41,12 @@ class CmdCock: Command("cock", "(@Mention) (@Mention...)", "", Category.FUN) {
         }
 
         if(args.size > 1){
-            val members = message!!.userMentions.buffer().blockFirst()!!
+            if(message!!.userMentions.blockFirst() == null) {
+                sender.sendError(Lang.getString("error_mention_required")).subscribe()
+                return
+            }
+
+            val members = message.userMentions.buffer().blockFirst()!!
             val cocks = HashMap<User, String>()
 
             members.forEach {

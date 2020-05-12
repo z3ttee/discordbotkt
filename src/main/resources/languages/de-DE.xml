@@ -48,6 +48,7 @@
     <item name="error_yt_deactivated">Die YouTube-Suche ist derzeit nicht aktiv.</item>
     <item name="error_text_mention_required">Du musst den Kanal als Mention übergeben</item>
     <item name="error_channel_text_required">Der gewählte Kanal ist kein Textkanal!</item>
+    <item name="error_mention_required">Achte darauf, dass du eine Mention erstellst mit \@Username</item>
 
     <item name="cmd_help_description">Zeigt den Hilfecenter</item>
     <item name="cmd_join_description">Tritt einem Sprachkanal bei</item>
