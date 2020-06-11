@@ -4,6 +4,7 @@ import com.google.api.client.googleapis.javanet.GoogleNetHttpTransport
 import com.google.api.client.json.JsonFactory
 import com.google.api.client.json.jackson2.JacksonFactory
 import com.google.api.services.youtube.YouTube
+import com.sedmelluq.discord.lavaplayer.tools.PlayerLibrary
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import de.zitzmanncedric.discordbot.command.handler.ConsoleHandler
 import de.zitzmanncedric.discordbot.config.MainConfig
@@ -91,6 +92,8 @@ class BotCore(token: String, ytapikey: String) {
     init {
         ytkey = ytapikey
         ytSearchEnabled = ytkey.isNotEmpty()
+
+        logger.info(PlayerLibrary.VERSION);
 
         // loading configs
         MainConfig.create()
