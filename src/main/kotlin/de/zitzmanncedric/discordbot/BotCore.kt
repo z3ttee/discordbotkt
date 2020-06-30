@@ -78,7 +78,7 @@ class BotCore(token: String, ytapikey: String) {
             val response = request.setMaxResults(maxResults).execute()
 
             if(response.items.isEmpty()) {
-                return ""
+                throw Exception("No items in response")
             }
 
             val result = response.items[0]

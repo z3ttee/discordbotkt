@@ -81,6 +81,7 @@ class CmdPlay: Command("play", "<url | query>", Lang.getString("cmd_play_descrip
             }
 
             val callback : (String) -> Unit = {
+
                 VoiceHandler.playSource(guild, URL(it))
             }
 
@@ -89,8 +90,12 @@ class CmdPlay: Command("play", "<url | query>", Lang.getString("cmd_play_descrip
                     val url: String = BotCore.performYoutubeSearch(query, 1)
                     callback(url)
                 } catch (e: Exception) {
-                    sender.sendException(e).subscribe()
-                    e.printStackTrace()
+                    if(e.message == "No items in response") {
+                        sender.sendError(Lang.getString("error_404")).subscribe()
+                    } else {
+                        sender.sendException(e).subscribe()
+                        e.printStackTrace()
+                    }
                 }
             }
 
