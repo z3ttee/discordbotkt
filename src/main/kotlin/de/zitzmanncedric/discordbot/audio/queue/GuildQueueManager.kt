@@ -15,6 +15,8 @@ import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
 import discord4j.core.spec.MessageCreateSpec
+import org.slf4j.Logger
+import org.slf4j.LoggerFactory
 import reactor.core.publisher.Mono
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
@@ -27,7 +29,6 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     var lastInfoMessage: Message? = null
     var shuffle: Boolean = false
     var loop: Boolean = false
-    var skip: Boolean = false
 
     init {
         AudioSourceManagers.registerRemoteSources(VoiceHandler.playerManager)
@@ -80,7 +81,6 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
                 queue = LinkedBlockingQueue(queue.filterIndexed { index, _ -> index+1 !in 0..amount })
             }
 
-            skip = true
             next()
             Messages.sendText(Lang.getString("audio_skipped"), VoiceHandler.getTextChannel(guild)!!).subscribe()
             it.success()
@@ -100,20 +100,24 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     }
 
     override fun onTrackEnd(player: AudioPlayer?, track: AudioTrack?, endReason: AudioTrackEndReason?) {
-        if(endReason!!.mayStartNext) {
+        if(endReason != null) {
+            if(endReason != AudioTrackEndReason.REPLACED) {
+                if(endReason.mayStartNext) {
 
-            if(track != null && loop && !skip) {
-                val loopedTrack: AudioTrack = track.makeClone()
-                audioPlayer.startTrack(loopedTrack, false)
-                return
+                    if(track != null && loop) {
+                        val loopedTrack: AudioTrack = track.makeClone()
+                        audioPlayer.startTrack(loopedTrack, false)
+                        return
+                    }
+
+                    next()
+                } else {
+                    try {
+                        if (lastInfoMessage != null) lastInfoMessage!!.delete().subscribe()
+                    } catch (ignored: Exception){ }
+                }
             }
-
-            if(skip) skip = !skip
-            next()
         }
-
-
-
 
         // requests.remove(track)
     }
