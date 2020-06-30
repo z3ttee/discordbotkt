@@ -76,6 +76,11 @@ class BotCore(token: String, ytapikey: String) {
             val service = getYoutubeService()
             val request = service!!.search().list("snippet").set("q", args).setKey(ytkey)
             val response = request.setMaxResults(maxResults).execute()
+
+            if(response.items.isEmpty()) {
+                return ""
+            }
+
             val result = response.items[0]
             val playlistID = result.id.playlistId
             val videoID = result.id.videoId
