@@ -14,6 +14,7 @@ import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
+import discord4j.core.spec.MessageCreateSpec
 import reactor.core.publisher.Mono
 import java.util.concurrent.BlockingQueue
 import java.util.concurrent.LinkedBlockingQueue
@@ -137,10 +138,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
 
     private fun sendInfoMessage(track: AudioTrack){
         if(!track.info.isStream) {
-
-            if(lastInfoMessage != null) {
-                lastInfoMessage!!.delete().subscribe()
-            }
+            val textChannel = VoiceHandler.getTextChannel(guild)!!
 
             var millis = track.duration
             var hours = 0
@@ -176,7 +174,42 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
             val looped: Boolean = VoiceHandler.getQueueManager(guild)!!.loop
             val shuffled: Boolean = VoiceHandler.getQueueManager(guild)!!.shuffle
 
-            VoiceHandler.getTextChannel(guild)!!.createMessage { message -> run {
+            val currentlyPlayingMsg = CurrentlyPlayingMessage(track, looped, shuffled, d)
+            if(lastInfoMessage != null) {
+                if(lastInfoMessage!!.id == textChannel.lastMessageId.get()) {
+                    // Edit message if its the last sent in the channel
+
+                    lastInfoMessage!!.edit { message -> run {
+                        message.setContent("**${Lang.getString("audio_now_playing")}**")
+                        message.setEmbed { embed -> run {
+                            embed.setTitle(track.info.title)
+                            embed.setDescription(" ")
+                            embed.addField(Lang.getString("audio_channel"), track.info.author, false)
+                            embed.addField(Lang.getString("audio_duration"), d, false)
+
+                            if(looped || shuffled) {
+                                embed.addField(Lang.getString("audio_settings"), when(looped){
+                                    true -> Lang.getString("info_looped")+" "
+                                    else -> ""
+                                } + when(shuffled){
+                                    true -> Lang.getString("info_shuffle")
+                                    else -> ""
+                                }, false)
+                            }
+
+                            embed.setUrl(track.info.uri)
+                        }}
+                    }}.subscribe { lastInfoMessage = it }
+
+                    return
+                } else {
+                    // Delete message if its not the last sent message
+                    lastInfoMessage!!.delete().subscribe()
+                }
+            }
+
+            // Send message
+            textChannel.createMessage { message -> run {
                 message.setContent("**${Lang.getString("audio_now_playing")}**")
                 message.setEmbed { embed -> run {
                     embed.setTitle(track.info.title)
@@ -211,4 +244,28 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
         }}.subscribe()
     }
 
+    private class CurrentlyPlayingMessage(val track: AudioTrack, val looped: Boolean, val shuffled: Boolean, val duration: String): MessageCreateSpec() {
+
+        init {
+            setContent("**${Lang.getString("audio_now_playing")}**")
+            setEmbed { embed -> run {
+                embed.setTitle(track.info.title)
+                embed.setDescription(" ")
+                embed.addField(Lang.getString("audio_channel"), track.info.author, false)
+                embed.addField(Lang.getString("audio_duration"), duration, false)
+
+                if(looped || shuffled) {
+                    embed.addField(Lang.getString("audio_settings"), when(looped){
+                        true -> Lang.getString("info_looped")+" "
+                        else -> ""
+                    } + when(shuffled){
+                        true -> Lang.getString("info_shuffle")
+                        else -> ""
+                    }, false)
+                }
+
+                embed.setUrl(track.info.uri)
+            }}
+        }
+    }
 }
