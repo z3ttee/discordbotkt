@@ -42,13 +42,13 @@ fun main(args: Array<String>) {
         logger.error("main(): Some attributes are missing values. Make sure to use a format like '-ATTR_NAME YOUR_VALUE'.")
     }
 
-    if(token.isEmpty()) {
+    if(token.isEmpty) {
         logger.error("main(): A token is needed. Otherwise the bot cannot authenticate on Discord.")
         logger.error("main(): So without a token the bot will not work. Bot is shutting down now...")
         exitProcess(0)
     }
 
-    if(ytKey.isEmpty()) {
+    if(ytKey.isEmpty) {
         logger.warn("main(): YT-Api-Key not found in command line arguments. Assuming that yt search with play command is not appreciated.")
         logger.warn("main(): YT-Search is not enabled.")
     }
@@ -63,10 +63,10 @@ class BotCore(token: String, ytapikey: String) {
         var ytkey : String = ""
         var avatarURL: String = ""
 
-        private val APPLICATION_NAME = "SyndicateBot Discord"
+        private const val APPLICATION_NAME = "SyndicateBot Discord"
         private val JSON_FACTORY: JsonFactory = JacksonFactory.getDefaultInstance()
 
-        fun getYoutubeService(): YouTube? {
+        private fun getYoutubeService(): YouTube? {
             val httpTransport = GoogleNetHttpTransport.newTrustedTransport()
             return YouTube.Builder(httpTransport, JSON_FACTORY, null).setApplicationName(APPLICATION_NAME).build()
         }
@@ -98,7 +98,7 @@ class BotCore(token: String, ytapikey: String) {
         ytkey = ytapikey
         ytSearchEnabled = ytkey.isNotEmpty()
 
-        logger.info(PlayerLibrary.VERSION);
+        logger.info(PlayerLibrary.VERSION)
 
         // loading configs
         MainConfig.create()

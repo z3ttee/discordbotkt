@@ -32,6 +32,8 @@ dependencies {
     implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.6.0'
     implementation group: 'com.googlecode.json-simple', name: 'json-simple', version: '1.1.1'
 
+    // https://mvnrepository.com/artifact/com.squareup.okhttp3/okhttp
+    implementation group: 'com.squareup.okhttp3', name: 'okhttp', version: '4.9.0'
 
 }
 
