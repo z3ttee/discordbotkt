@@ -8,7 +8,7 @@ import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
 import discord4j.core.`object`.entity.User
-import java.awt.Color
+import discord4j.rest.util.Color
 import java.util.function.Consumer
 import kotlin.random.Random
 
@@ -32,7 +32,7 @@ class CmdCock: Command("cock", "(@Mention) (@Mention...)", "", Category.FUN) {
 
             sender.sendTextWitEmbed(Lang.getString("headline_cock_comp"), Consumer {
                 embed -> run {
-                    embed.setColor(Color(255, 51, 150))
+                    embed.setColor(Color.PINK)
                     embed.setTitle(Lang.getString("paragraph_who_has_mightiest"))
                     embed.addField(Lang.getString("paragraph_cock_result").replace("%mention%", member.username).replace("%length%", (cock.length-2).toString()), cock, false)
                 }
@@ -56,7 +56,7 @@ class CmdCock: Command("cock", "(@Mention) (@Mention...)", "", Category.FUN) {
 
             sender.sendTextWitEmbed(Lang.getString("headline_cock_comp"), Consumer {
                 embed -> run {
-                embed.setColor(Color(255, 51, 150))
+                embed.setColor(Color.PINK)
                 embed.setTitle(Lang.getString("paragraph_who_has_mightiest"))
 
                 cocks.keys.forEach {

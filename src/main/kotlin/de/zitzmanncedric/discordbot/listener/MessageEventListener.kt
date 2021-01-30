@@ -7,9 +7,7 @@ import de.zitzmanncedric.discordbot.config.MainConfig
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.event.domain.message.MessageUpdateEvent
-import discord4j.core.spec.EmbedCreateSpec
 import org.json.simple.JSONObject
-import java.util.*
 import java.util.function.Consumer
 import kotlin.collections.ArrayList
 
@@ -59,13 +57,13 @@ class MessageEventListener {
         }
 
         try {
-            if (!event.message.content.get().startsWith("ss ", false)) return
+            if (!event.message.content.startsWith("ss ", false)) return
             if (event.member.get().isBot) return
 
             val typing = event.message.channel.block()
             typing!!.type().block()
 
-            CommandHandler.handleCommand(event.guild.block(), event.message, event.message.content.get(), DiscordSender(event.member.get(), event.message.channel.block()!!))
+            CommandHandler.handleCommand(event.guild.block(), event.message, event.message.content, DiscordSender(event.member.get(), event.message.channel.block()!!))
         } catch (ignored: Exception){ }
     }
 

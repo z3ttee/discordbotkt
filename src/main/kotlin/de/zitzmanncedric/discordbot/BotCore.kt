@@ -13,6 +13,7 @@ import de.zitzmanncedric.discordbot.language.Language
 import de.zitzmanncedric.discordbot.listener.MessageEventListener
 import de.zitzmanncedric.discordbot.listener.ReadyEventListener
 import discord4j.core.DiscordClient
+import discord4j.core.GatewayDiscordClient
 import discord4j.core.event.domain.lifecycle.ReadyEvent
 import discord4j.core.event.domain.message.MessageCreateEvent
 import discord4j.core.event.domain.message.MessageUpdateEvent
@@ -59,11 +60,12 @@ fun main(args: Array<String>) {
 class BotCore(token: String, ytapikey: String) {
     companion object {
         var discordClient: DiscordClient? = null
+        var clientGateway: GatewayDiscordClient? = null
         var ytSearchEnabled: Boolean = false
         var ytkey : String = ""
         var avatarURL: String = ""
 
-        private const val APPLICATION_NAME = "SyndicateBot Discord"
+        private const val APPLICATION_NAME = "DiscordBot"
         private val JSON_FACTORY: JsonFactory = JacksonFactory.getDefaultInstance()
 
         private fun getYoutubeService(): YouTube? {
@@ -116,15 +118,17 @@ class BotCore(token: String, ytapikey: String) {
 
         // Getting avatarURL
         try {
-            avatarURL = discordClient!!.self.block()!!.avatarUrl
+            avatarURL = discordClient!!.self.block()!!.avatar().get()
         } catch (ignored: Exception){ }
 
-        // registering events
-        discordClient!!.eventDispatcher.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
-        discordClient!!.eventDispatcher.on(MessageCreateEvent::class.java).subscribe { (MessageEventListener()::onMessage)(it) }
-        discordClient!!.eventDispatcher.on(MessageUpdateEvent::class.java).subscribe { (MessageEventListener()::onMessageUpdated)(it) }
-
         // logging in
-        discordClient!!.login().block()
+        clientGateway = discordClient!!.login().block()
+
+        // registering events
+        clientGateway!!.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
+        clientGateway!!.on(MessageCreateEvent::class.java).subscribe { (MessageEventListener()::onMessage)(it) }
+        clientGateway!!.on(MessageUpdateEvent::class.java).subscribe { (MessageEventListener()::onMessageUpdated)(it) }
+
+
     }
 }

@@ -6,11 +6,11 @@ import de.zitzmanncedric.discordbot.command.Command
 import de.zitzmanncedric.discordbot.command.sender.DiscordSender
 import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.language.Lang
-import discord4j.core.`object`.entity.Channel
+import discord4j.common.util.Snowflake
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
-import discord4j.core.`object`.entity.MessageChannel
-import discord4j.core.`object`.util.Snowflake
+import discord4j.core.`object`.entity.channel.Channel
+import discord4j.core.`object`.entity.channel.MessageChannel
 
 class CmdBind: Command("bind", "<#textchannel>", Lang.getString("cmd_bind_description"), Category.MUSIC) {
 

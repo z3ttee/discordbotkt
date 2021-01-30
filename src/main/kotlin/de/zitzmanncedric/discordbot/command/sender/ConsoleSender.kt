@@ -2,7 +2,7 @@ package de.zitzmanncedric.discordbot.command.sender
 
 import de.zitzmanncedric.discordbot.command.handler.CommandHandler
 import discord4j.core.`object`.entity.Message
-import discord4j.core.`object`.entity.MessageChannel
+import discord4j.core.`object`.entity.channel.MessageChannel
 import discord4j.core.spec.EmbedCreateSpec
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory

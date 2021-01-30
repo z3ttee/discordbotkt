@@ -1,11 +1,11 @@
 package de.zitzmanncedric.discordbot.message
 
 import discord4j.core.`object`.entity.Message
-import discord4j.core.`object`.entity.MessageChannel
+import discord4j.core.`object`.entity.channel.MessageChannel
 import discord4j.core.spec.EmbedCreateSpec
 import discord4j.core.spec.MessageCreateSpec
+import discord4j.rest.util.Color
 import reactor.core.publisher.Mono
-import java.awt.Color
 import java.util.function.Consumer
 
 object Messages {
@@ -30,13 +30,13 @@ object Messages {
         }}
     }
 
-    fun createText(content: String): Consumer<in MessageCreateSpec> {
+    private fun createText(content: String): Consumer<in MessageCreateSpec> {
         return Consumer { it.setContent("**$content**") }
     }
-    fun createError(content: String): Consumer<in MessageCreateSpec> {
+    private fun createError(content: String): Consumer<in MessageCreateSpec> {
         return Consumer { it.setContent(":no_entry: **$content**") }
     }
-    fun createException(ex: Exception): Consumer<in MessageCreateSpec> {
+    private fun createException(ex: Exception): Consumer<in MessageCreateSpec> {
         return Consumer { message -> run {
             message.setContent(":no_entry: **Es ist ein Fehler aufgetreten: **")
             message.setEmbed { embed -> run {

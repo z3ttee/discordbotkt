@@ -11,7 +11,7 @@ import de.zitzmanncedric.discordbot.language.Lang
 import discord4j.core.`object`.VoiceState
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Message
-import discord4j.core.`object`.entity.VoiceChannel
+import discord4j.core.`object`.entity.channel.VoiceChannel
 import org.apache.commons.validator.routines.UrlValidator
 import java.net.URL
 import java.util.*

@@ -8,6 +8,8 @@ import de.zitzmanncedric.discordbot.command.sender.Sender
 import de.zitzmanncedric.discordbot.language.Lang
 import discord4j.core.`object`.VoiceState
 import discord4j.core.`object`.entity.*
+import discord4j.core.`object`.entity.channel.Channel
+import discord4j.core.`object`.entity.channel.VoiceChannel
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 

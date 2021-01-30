@@ -6,8 +6,8 @@ import de.zitzmanncedric.discordbot.audio.queue.GuildQueueManager
 import de.zitzmanncedric.discordbot.language.Lang
 import de.zitzmanncedric.discordbot.message.Messages
 import discord4j.core.`object`.entity.Guild
-import discord4j.core.`object`.entity.MessageChannel
-import discord4j.core.`object`.entity.VoiceChannel
+import discord4j.core.`object`.entity.channel.MessageChannel
+import discord4j.core.`object`.entity.channel.VoiceChannel
 import discord4j.voice.VoiceConnection
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
@@ -53,9 +53,10 @@ object VoiceHandler {
         return Mono.create {
             if (activeConnections.containsKey(guild)) {
                 val connection: VoiceConnection = activeConnections.remove(guild)!!
-                connection.disconnect().also {
+                connection.disconnect().subscribe {
                     Messages.sendText(Lang.getString("channel_left"), getTextChannel(guild)!!)
-                    // TODO: Clear and stop music queue
+                    getQueueManager(guild)?.queue?.clear()
+                    getQueueManager(guild)?.audioPlayer?.stopTrack()
                 }
             }
             textChannels.remove(guild)

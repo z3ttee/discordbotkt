@@ -9,7 +9,7 @@ import discord4j.core.`object`.VoiceState
 import discord4j.core.`object`.entity.Guild
 import discord4j.core.`object`.entity.Member
 import discord4j.core.`object`.entity.Message
-import discord4j.core.`object`.entity.VoiceChannel
+import discord4j.core.`object`.entity.channel.VoiceChannel
 import kotlin.collections.ArrayList
 import kotlin.random.Random
 
