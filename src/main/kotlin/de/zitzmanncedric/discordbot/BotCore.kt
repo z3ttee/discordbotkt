@@ -42,13 +42,13 @@ fun main(args: Array<String>) {
         logger.error("main(): Some attributes are missing values. Make sure to use a format like '-ATTR_NAME YOUR_VALUE'.")
     }
 
-    if(token.isEmpty) {
+    if(token.isEmpty()) {
         logger.error("main(): A token is needed. Otherwise the bot cannot authenticate on Discord.")
         logger.error("main(): So without a token the bot will not work. Bot is shutting down now...")
         exitProcess(0)
     }
 
-    if(ytKey.isEmpty) {
+    if(ytKey.isEmpty()) {
         logger.warn("main(): YT-Api-Key not found in command line arguments. Assuming that yt search with play command is not appreciated.")
         logger.warn("main(): YT-Search is not enabled.")
     }
