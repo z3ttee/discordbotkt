@@ -97,38 +97,44 @@ class BotCore(token: String, ytapikey: String) {
     }
 
     init {
-        ytkey = ytapikey
-        ytSearchEnabled = ytkey.isNotEmpty()
 
-        logger.info(PlayerLibrary.VERSION)
+        Thread {
+            ytkey = ytapikey
+            ytSearchEnabled = ytkey.isNotEmpty()
 
-        // loading configs
-        MainConfig.create()
+            logger.info(PlayerLibrary.VERSION)
 
-        // load language
-        // TODO: Make it an option via command and config
-        Lang.initialize(Language.DE)
+            // loading configs
+            MainConfig.create()
 
-        // registering commands
-        ConsoleHandler.start()
-        CommandHandler.registerCommands()
+            // load language
+            // TODO: Make it an option via command and config
+            Lang.initialize(Language.DE)
 
-        // creating instance of client
-        discordClient = DiscordClient.create(token)
+            // registering commands
+            ConsoleHandler.start()
+            CommandHandler.registerCommands()
 
-        // Getting avatarURL
-        try {
-            avatarURL = discordClient!!.self.block()!!.avatar().get()
-        } catch (ignored: Exception){ }
+            // creating instance of client
+            discordClient = DiscordClient.create(token)
 
-        // logging in
-        clientGateway = discordClient!!.login().block()
+            // Getting avatarURL
+            try {
+                avatarURL = discordClient!!.self.block()!!.avatar().get()
+            } catch (ignored: Exception) {
+            }
 
-        // registering events
-        clientGateway!!.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
-        clientGateway!!.on(MessageCreateEvent::class.java).subscribe { (MessageEventListener()::onMessage)(it) }
-        clientGateway!!.on(MessageUpdateEvent::class.java).subscribe { (MessageEventListener()::onMessageUpdated)(it) }
+            // logging in
+            clientGateway = discordClient!!.login().block()
 
+            // registering events
+            clientGateway!!.on(ReadyEvent::class.java).subscribe { (ReadyEventListener()::onReady)(it) }
+            clientGateway!!.on(MessageCreateEvent::class.java).subscribe { (MessageEventListener()::onMessage)(it) }
+            clientGateway!!.on(MessageUpdateEvent::class.java)
+                .subscribe { (MessageEventListener()::onMessageUpdated)(it) }
+        }.start()
 
+        // Stay alive till programm termination
+        Thread.currentThread().join()
     }
 }
