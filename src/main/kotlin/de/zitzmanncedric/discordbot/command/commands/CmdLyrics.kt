@@ -35,14 +35,18 @@ class CmdLyrics: Command("lyrics", "(query)", "Sucht passende lyrics auf Genius.
         if(lyrics != null) {
             when (lyrics.responseCode) {
                 200L -> {
-                    var chunkedResult = lyrics.text.chunked(1900)
-                    val firstLine: String = chunkedResult[0]
-                    chunkedResult = chunkedResult.subList(1, chunkedResult.size)
+                    try {
+                        var chunkedResult = lyrics.text.chunked(1900)
+                        val firstLine: String = chunkedResult[0]
+                        chunkedResult = chunkedResult.subList(1, chunkedResult.size)
 
-                    sender.sendNormalText("**${Lang.getString("paragraph_genius_success")}**\n\n$firstLine").block()
+                        sender.sendNormalText("**${Lang.getString("paragraph_genius_success")}**\n\n$firstLine").block()
 
-                    for (msg in chunkedResult) {
-                        sender.sendNormalText(msg).block()
+                        for (msg in chunkedResult) {
+                            sender.sendNormalText(msg).block()
+                        }
+                    } catch (ignored: java.lang.Exception) {
+                        sender.sendError("An error occured when chunking lyrics before sending. Please try again.")
                     }
                 }
                 404L -> {
@@ -52,6 +56,8 @@ class CmdLyrics: Command("lyrics", "(query)", "Sucht passende lyrics auf Genius.
                     sender.sendException(Exception(lyrics.errorMessage)).subscribe()
                 }
             }
+        } else {
+            sender.sendError("Could not send a request. This usually means, that Genius.com is experiencing issues or an api access is not configured for the bot.")
         }
     }
 }
