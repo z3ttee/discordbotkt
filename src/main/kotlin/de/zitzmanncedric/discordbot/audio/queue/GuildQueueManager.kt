@@ -26,7 +26,7 @@ class GuildQueueManager(val guild: Guild, val audioPlayer: AudioPlayer): AudioEv
     val audioProvider: discord4j.voice.AudioProvider = AudioProvider(audioPlayer)
     //TODO: val requests: HashMap<AudioTrack, Member> = HashMap()
     var queue: BlockingQueue<AudioTrack> = LinkedBlockingQueue()
-    var lastInfoMessage: Message? = null
+    private var lastInfoMessage: Message? = null
     var shuffle: Boolean = false
     var loop: Boolean = false
 
