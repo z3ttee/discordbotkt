@@ -15,7 +15,9 @@ object GeniusAPI {
     private const val apiURL: String = "https://api.genius.com"
     private val accessToken = MainConfig.getString("geniusapi/access_token")
 
-    fun getLyricsFor(query: String): GeniusLyrics {
+    fun getLyricsFor(query: String): GeniusLyrics? {
+        if(accessToken.isEmpty()) return null
+
         val lyrics = GeniusLyrics(200L, "", "")
 
         val httpClient = OkHttpClient()
